@@ -888,6 +888,11 @@
                 `DESCRIPTION:${eventConfig.description}`,
                 'STATUS:CONFIRMED',
                 'SEQUENCE:0',
+                'BEGIN:VALARM',
+                'TRIGGER:-PT30M',
+                'ACTION:DISPLAY',
+                'DESCRIPTION:Reminder',
+                'END:VALARM',
                 'END:VEVENT',
                 'END:VCALENDAR'
             ].join('\r\n');
