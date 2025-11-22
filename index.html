@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAMAGO | Berklee J-Pop Ensemble</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DotGothic16&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --tamago-blue: #00ADF0;
+            --tamago-yellow: #FFF100;
+            --tamago-white: #FFFFFF;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--tamago-blue);
+            color: var(--tamago-white);
+            font-family: 'Dela Gothic One', sans-serif;
+        }
+
+        /* 背景文字层 */
+        .background-text-layer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 200vmax;
+            height: 200vmax;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            z-index: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+        .background-text-line {
+            font-size: 24vh;
+            line-height: 1.2;
+            white-space: nowrap;
+            color: transparent;
+            -webkit-text-stroke: 14px #2dc4f1;
+            display: flex;
+            width: 100%;
+            letter-spacing: 0.2em;
+        }
+
+        .background-text-item {
+            flex-shrink: 0;
+            padding-right: 0;
+            animation-name: bg-scroll;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes bg-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+
+        /* 主容器 - 确保内容居中 */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* 顶部无限滚动条 */
+        .marquee-container {
+            background: var(--tamago-white);
+            color: var(--tamago-blue);
+            padding: 1.5vh 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            border-bottom: 0.5vh solid var(--tamago-yellow);
+            width: 100%;
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+        }
+
+        .marquee-content {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            font-size: 2.5vh;
+            padding-right: 1vh;
+            white-space: nowrap;
+        }
+
+        /* 主视觉区域 */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            padding: 0 2vh;
+            box-sizing: border-box;
+        }
+
+        .main-title {
+            font-size: 24vh;
+            line-height: 0.85;
+            text-transform: uppercase;
+            font-weight: lighter;
+            z-index: 2;
+            text-shadow: 
+                0.05em 0.05em 0 var(--tamago-blue),
+                0.1em 0.1em 0 var(--tamago-yellow);
+            letter-spacing: 0;
+            word-break: break-word;
+            hyphens: auto;
+            max-height: none;
+            overflow: visible;
+            padding: 1vh;
+        }
+
+        .sub-title {
+            font-size: 5vh;
+            margin-top: 2vh;
+            font-family: 'Dela Gothic One', sans-serif;
+            padding: 0 2vh;
+            line-height: 1.1;
+            max-width: none;
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        /* 波纹装饰 */
+        .ripple-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ripple-bg {
+            position: absolute;
+            border: 0.8vh solid var(--tamago-yellow);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.6;
+            transform-origin: center center;
+        }
+
+        .ripple-bg.ring-1 {
+            width: 60vh;
+            height: 72vh;
+        }
+
+        .ripple-bg.ring-2 {
+            width: 50vh;
+            height: 60vh;
+        }
+
+        .ripple-bg.ring-3 {
+            width: 40vh;
+            height: 48vh;
+        }
+
+        .ripple-bg.ring-4 {
+            width: 30vh;
+            height: 36vh;
+        }
+
+        .ripple-bg.ring-5 {
+            width: 20vh;
+            height: 24vh;
+        }
+
+        .ripple-bg.ring-6 {
+            width: 10vh;
+            height: 12vh;
+        }
+
+        .ripple-bg.ring-7 {
+            width: 70vh;
+            height: 84vh;
+        }
+
+        /* 成员照片容器 */
+        .member-showcase {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 8vh 5vh;
+            margin-bottom: 5vh;
+        }
+
+        .egg-carton-img {
+            width: 60vh;
+            max-width: none;
+            border: 0.8vh solid var(--tamago-white);
+            border-radius: 3vh;
+            display: block;
+            transform: rotate(-2deg);
+        }
+
+        /* Title Crack Effect */
+        .title-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            margin: 0 auto; /* Ensure centering */
+            padding: 2vh 0;
+            overflow: visible;
+        }
+
+        .title-placeholder {
+            visibility: hidden;
+            pointer-events: none;
+            font-size: 24vh;
+            line-height: 0.85;
+            text-transform: uppercase;
+            font-weight: lighter;
+            padding: 1vh;
+            /* Keep layout space */
+        }
+
+        .crack-part {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* transition removed to let GSAP handle animations */
+            font-size: 24vh;
+            line-height: 0.85;
+            text-transform: uppercase;
+            font-weight: lighter;
+            text-shadow: 
+                0.05em 0.05em 0 var(--tamago-blue),
+                0.1em 0.1em 0 var(--tamago-yellow);
+            letter-spacing: 0;
+            padding: 1vh;
+            margin: 0;
+            pointer-events: auto;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .crack-part.left {
+            clip-path: polygon(0% 0%, 55% 0%, 45% 25%, 55% 50%, 45% 75%, 55% 100%, 0% 100%);
+            z-index: 2;
+        }
+
+        .crack-part.right {
+            clip-path: polygon(55% 0%, 100% 0%, 100% 100%, 55% 100%, 45% 75%, 55% 50%, 45% 25%);
+            z-index: 2;
+        }
+
+        .title-wrapper.cracked .crack-part.left {
+            pointer-events: none;
+        }
+
+        .title-wrapper.cracked .crack-part.right {
+            pointer-events: none;
+        }
+
+        .handwritten-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5) rotate(-5deg);
+            font-family: 'Zen Kurenaido', sans-serif;
+            font-size: 12vh;
+            color: var(--tamago-yellow);
+            text-shadow: 0.4vh 0.4vh 0 var(--tamago-blue);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition-delay: 0.1s;
+            z-index: 1;
+            white-space: nowrap;
+        }
+
+        .title-wrapper.cracked .handwritten-title {
+            transform: translate(-50%, -50%) scale(1) rotate(-5deg);
+            opacity: 1;
+        }
+
+        /* 动画关键帧 - Removed as GSAP handles marquee */
+        /* @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        } */
+
+        /* 响应式设计 - Removed as per request to base everything on height */
+
+    </style>
+</head>
+<body>
+    <div class="background-text-layer"></div>
+    <div class="marquee-container">
+        <div class="marquee-track">
+            <span class="marquee-text">DEC 5TH 4:30 PM @ DAVID FRIEND RECITAL HALL /// TAMAGO ///</span>
+        </div>
+    </div>
+
+    <section class="hero-section">
+        <div class="ripple-container">
+            <div class="ripple-bg ring-7"></div>
+            <div class="ripple-bg ring-1"></div>
+            <div class="ripple-bg ring-2"></div>
+            <div class="ripple-bg ring-3"></div>
+            <div class="ripple-bg ring-4"></div>
+            <div class="ripple-bg ring-5"></div>
+            <div class="ripple-bg ring-6"></div>
+        </div>
+
+        <div class="title-wrapper">
+            <div class="title-placeholder">
+                た<br>ま<br>ご
+            </div>
+            <h1 class="main-title crack-part left">
+                た<br>ま<br>ご
+            </h1>
+            <h1 class="main-title crack-part right">
+                た<br>ま<br>ご
+            </h1>
+            <div class="handwritten-title">
+                Tamago
+            </div>
+        </div>
+
+        <p class="sub-title">BERKLEE'S 1ST J-POP ENSEMBLE</p>
+    </section>
+
+
+
+    <script>
+        // Marquee Logic
+        const marqueeSpeed = 100; // Pixels per second
+        const track = document.querySelector('.marquee-track');
+        const originalContent = track.innerHTML; 
+
+        function setupMarquee() {
+            // Reset to initial state
+            track.innerHTML = `<div class="marquee-content">${originalContent}</div>`;
+            const contentBlock = track.querySelector('.marquee-content');
+            
+            // Fill screen
+            let contentWidth = contentBlock.offsetWidth;
+            while (contentWidth < window.innerWidth) {
+                contentBlock.innerHTML += originalContent;
+                contentWidth = contentBlock.offsetWidth;
+            }
+            
+            // Create seamless loop duplicate
+            const cloneBlock = contentBlock.cloneNode(true);
+            cloneBlock.setAttribute('aria-hidden', 'true');
+            track.appendChild(cloneBlock);
+            
+            // Animate
+            const duration = contentWidth / marqueeSpeed;
+            
+            gsap.killTweensOf(track);
+            gsap.to(track, {
+                x: -contentWidth,
+                duration: duration,
+                ease: "none",
+                repeat: -1,
+                overwrite: true
+            });
+        }
+
+        setupMarquee();
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(setupMarquee, 250);
+        });
+
+        // GSAP 动画逻辑
+
+        // 1. 让标题文字像果冻一样Q弹出现
+        function playTitleAnimation() {
+            const titleWrapper = document.querySelector(".title-wrapper");
+            
+            // If cracked, don't play the bounce animation or reset it?
+            // Let's just play it on the wrapper.
+            
+            // 杀死所有正在进行的动画，防止堆叠
+            gsap.killTweensOf(titleWrapper);
+            
+            // 重置位置并立刻播放入场动画
+            gsap.set(titleWrapper, { y: 100, opacity: 0 });
+            gsap.to(titleWrapper, {
+                duration: 1.5,
+                y: 0,
+                opacity: 1,
+                ease: "elastic.out(1, 0.3)"
+            });
+        }
+
+        // 初始播放动画（使用 fromTo 确保元素初始状态正确）
+        gsap.fromTo(".title-wrapper", 
+            { y: 100, opacity: 0 },
+            {
+                duration: 1.5,
+                y: 0,
+                opacity: 1,
+                ease: "elastic.out(1, 0.3)"
+            }
+        );
+
+        // 为标题添加点击事件
+        document.querySelector(".title-wrapper").addEventListener("click", playTitleAnimation);
+
+        // 2. 让背景的黄色圆圈不断旋转且呼吸
+        gsap.to(".ripple-bg", {
+            duration: 20,
+            rotation: 360,
+            repeat: -1,
+            ease: "linear",
+            transformOrigin: "center center"
+        });
+        
+        gsap.to(".ripple-bg", {
+            duration: 2,
+            scale: 1.1,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            stagger: 0.5,
+            transformOrigin: "center center"
+        });
+
+        // 3. 让照片轻轻摇晃 (闲置动画)
+        gsap.to(".egg-carton-img", {
+            duration: 3,
+            rotation: 2,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            transformOrigin: "center center"
+        });
+
+        // 标题破裂效果动画
+        const titleWrapper = document.querySelector(".title-wrapper");
+        const crackParts = document.querySelectorAll(".crack-part");
+        const handwrittenTitle = document.querySelector(".handwritten-title");
+
+        // Small WebAudio crack sound generator (no external asset required)
+        let _audioCtx = null;
+        function playCrackSound() {
+            try {
+                if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const ctx = _audioCtx;
+
+                // Short noise burst
+                const bufferSize = ctx.sampleRate * 0.1; // 100ms
+                const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-3 * i / bufferSize);
+                }
+                const noise = ctx.createBufferSource();
+                noise.buffer = noiseBuffer;
+                const noiseGain = ctx.createGain();
+                noiseGain.gain.value = 0.8;
+
+                noise.connect(noiseGain);
+
+                // Short tonal click (oscillator) to add snap
+                const osc = ctx.createOscillator();
+                osc.type = 'square';
+                osc.frequency.value = 800;
+                const oscGain = ctx.createGain();
+                oscGain.gain.value = 0.0001;
+
+                // Master gain with quick envelope
+                const master = ctx.createGain();
+                master.gain.value = 0.0001;
+
+                noiseGain.connect(master);
+                oscGain.connect(master);
+                master.connect(ctx.destination);
+
+                const now = ctx.currentTime;
+                // oscillator envelope (very short click)
+                oscGain.gain.setValueAtTime(0.0001, now);
+                oscGain.gain.exponentialRampToValueAtTime(0.5, now + 0.002);
+                oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+
+                // master envelope
+                master.gain.setValueAtTime(0.0001, now);
+                master.gain.exponentialRampToValueAtTime(1.0, now + 0.003);
+                master.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+
+                osc.start(now);
+                osc.stop(now + 0.06);
+
+                noise.start(now);
+                noise.stop(now + 0.12);
+            } catch (e) {
+                // AudioContext may be blocked by browser autoplay policies; ignore gracefully
+                console.warn('playCrackSound failed', e);
+            }
+        }
+
+        // Shared function to play crack/open or reset animation
+        function playCrack() {
+            if (!titleWrapper.classList.contains("cracked")) {
+                titleWrapper.classList.add("cracked");
+
+                // play crack sound
+                playCrackSound();
+
+                // 播放破裂動畫（左右移動后再淡出）
+                gsap.to(crackParts[0], {
+                    duration: 0.8,
+                    x: -120,
+                    rotate: -25,
+                    ease: "expo.out"
+                });
+                gsap.to(crackParts[0], {
+                    duration: 0.5,
+                    opacity: 0,
+                    delay: 0.8,
+                    ease: "power1.out"
+                });
+
+                gsap.to(crackParts[1], {
+                    duration: 0.8,
+                    x: 120,
+                    rotate: 25,
+                    ease: "expo.out"
+                });
+                gsap.to(crackParts[1], {
+                    duration: 0.5,
+                    opacity: 0,
+                    delay: 0.8,
+                    ease: "power1.out"
+                });
+
+                // 手寫標題淡入
+                gsap.to(handwrittenTitle, {
+                    duration: 0.6,
+                    opacity: 1,
+                    scale: 1,
+                    rotate: -5,
+                    ease: "back.out(1.7)",
+                    delay: 0.2
+                });
+            } else {
+                // Reverse: handwritten shrinks first, then pieces close
+                titleWrapper.classList.remove("cracked");
+
+                gsap.to(handwrittenTitle, {
+                    duration: 0.4,
+                    opacity: 0,
+                    scale: 0.5,
+                    ease: "power2.in"
+                });
+
+                gsap.to(crackParts, {
+                    duration: 0.6,
+                    opacity: 1,
+                    x: 0,
+                    rotate: 0,
+                    ease: "power2.out",
+                    delay: 0.4
+                });
+            }
+        }
+
+        // Desktop double-click
+        titleWrapper.addEventListener("dblclick", playCrack);
+
+        // Mobile: detect double-tap via touchend (two taps within 400ms)
+        let _lastTap = 0;
+        titleWrapper.addEventListener("touchend", function (e) {
+            const now = Date.now();
+            const delta = now - _lastTap;
+            if (delta > 0 && delta < 400) {
+                e.preventDefault();
+                playCrack();
+                _lastTap = 0; // reset
+            } else {
+                _lastTap = now;
+            }
+        }, { passive: false });
+
+        // Background Text Generation
+        function initBackgroundText() {
+            const layer = document.querySelector('.background-text-layer');
+            if (!layer) return;
+            layer.innerHTML = '';
+
+            const fontSize = window.innerHeight * 0.24; // 24vh
+            const lineHeight = fontSize * 1.2;
+            // Use a large enough dimension to cover the rotated area
+            const totalHeight = Math.max(window.innerWidth, window.innerHeight) * 2.5; 
+            const count = Math.ceil(totalHeight / lineHeight);
+
+            const baseText = "日本音楽";
+            const repeatCount = 50; // Ensure it's wide enough
+            const content = baseText.repeat(repeatCount);
+            
+            for (let i = 0; i < count; i++) {
+                const line = document.createElement('div');
+                line.className = 'background-text-line';
+                
+                // Stagger every other line by 2 characters (approx 2.4em with spacing)
+                if (i % 2 !== 0) {
+                    line.style.transform = 'translateX(-2.4em)';
+                }
+                
+                const item1 = document.createElement('div');
+                item1.className = 'background-text-item';
+                item1.textContent = content;
+                
+                const item2 = document.createElement('div');
+                item2.className = 'background-text-item';
+                item2.textContent = content;
+
+                line.appendChild(item1);
+                line.appendChild(item2);
+                layer.appendChild(line);
+            }
+
+            // Calculate duration for constant speed (pixels per second)
+            const firstItem = layer.querySelector('.background-text-item');
+            if (firstItem) {
+                const width = firstItem.offsetWidth;
+                const speed = 100; // pixels per second
+                const duration = width / speed;
+                
+                const items = layer.querySelectorAll('.background-text-item');
+                items.forEach(item => {
+                    item.style.animationDuration = `${duration}s`;
+                });
+            }
+        }
+
+        window.addEventListener('load', initBackgroundText);
+        let bgResizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(bgResizeTimer);
+            bgResizeTimer = setTimeout(initBackgroundText, 250);
+        });
+    </script>
+</body>
+</html>
