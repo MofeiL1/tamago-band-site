@@ -56,10 +56,10 @@
 
         .background-text-line {
             font-size: 24vh;
-            line-height: 1.2;
+            line-height: 1;
             white-space: nowrap;
             color: transparent;
-            -webkit-text-stroke: 14px #2dc4f1;
+            -webkit-text-stroke: 0.07em #2dc4f1;
             display: flex;
             width: 100%;
             letter-spacing: 0.2em;
@@ -130,8 +130,10 @@
             text-align: center;
             position: relative;
             width: 100%;
-            height: 100vh;
-            padding: 0 2vh;
+            /* Reserve space at the top equal to the marquee's actual height so
+               the title-wrapper's top is never overlapped by the fixed marquee. */
+            padding: var(--marquee-height, 0px) 2vh 0;
+            min-height: calc(100vh - var(--marquee-height, 0px));
             box-sizing: border-box;
         }
 
@@ -283,12 +285,12 @@
         }
 
         .crack-part.left {
-            clip-path: polygon(0% 0%, 55% 0%, 45% 25%, 55% 50%, 45% 75%, 55% 100%, 0% 100%);
+            clip-path: polygon(0% 0%, 56% 0%, 46% 25%, 56% 50%, 46% 75%, 56% 100%, 0% 100%);
             z-index: 2;
         }
 
         .crack-part.right {
-            clip-path: polygon(55% 0%, 100% 0%, 100% 100%, 55% 100%, 45% 75%, 55% 50%, 45% 25%);
+            clip-path: polygon(54% 0%, 100% 0%, 100% 100%, 54% 100%, 44% 75%, 54% 50%, 44% 25%);
             z-index: 2;
         }
 
@@ -319,6 +321,104 @@
         .title-wrapper.cracked .handwritten-title {
             transform: translate(-50%, -50%) scale(1) rotate(-5deg);
             opacity: 1;
+        }
+
+        /* --- Calendar Button Styles --- */
+        .calendar-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        .calendar-btn {
+            background-color: var(--tamago-yellow);
+            color: var(--tamago-blue);
+            font-family: 'Dela Gothic One', sans-serif;
+            padding: 1.5vh 4vh;
+            font-size: 2.5vh;
+            border: 0.4vh solid var(--tamago-white);
+            border-radius: 5vh;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0.4vh 0.4vh 0 var(--tamago-blue);
+        }
+
+        .calendar-btn:hover {
+            transform: translate(-0.2vh, -0.2vh);
+            box-shadow: 0.6vh 0.6vh 0 var(--tamago-blue);
+            background-color: var(--tamago-white);
+        }
+
+        .calendar-dropdown {
+            display: flex;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            
+            /* 初始状态：隐藏 */
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+
+            background-color: var(--tamago-white);
+                min-width: 42vh;
+            border: 0.4vh solid var(--tamago-blue);
+            border-radius: 1vh;
+            overflow: hidden;
+            flex-direction: column;
+            box-shadow: 0.8vh 0.8vh 0 rgba(0,0,0,0.2);
+            transform-origin: center center;
+            z-index: 20;
+
+            /* 消失动画 */
+            transition: 
+                opacity 0.2s ease-out,
+                transform 0.2s ease-out,
+                visibility 0.2s;
+        }
+
+        .calendar-dropdown.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+
+            /* 出现动画 */
+            transition: 
+                opacity 0.4s ease,
+                transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                visibility 0s;
+        }
+
+        .dropdown-item {
+            color: var(--tamago-blue);
+            padding: 2.4vh 3vh; /* 增加内边距，让按钮更大 */
+            text-decoration: none;
+            display: flex; /* 使用 flex 便于垂直水平居中 */
+            align-items: center;
+            justify-content: space-between;
+            gap: 1vh;
+            border: none;
+            background: none;
+            width: 100%;
+            min-height: 6.5vh; /* 保证按钮高度 */
+            cursor: pointer;
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 2.6vh; /* 放大字体 */
+            line-height: 1.1;
+            transition: background-color 0.18s, transform 0.18s;
+            border-bottom: 0.35vh solid var(--tamago-blue);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--tamago-yellow);
+            transform: translateY(-0.2vh);
         }
 
         /* 动画关键帧 - Removed as GSAP handles marquee */
@@ -364,7 +464,21 @@
                 Tamago
             </div>
         </div>
-
+        <div class="calendar-wrapper">
+            <button onclick="toggleCalendarDropdown()" class="calendar-btn">
+                Add to Calendar
+            </button>
+            <div id="calendarDropdown" class="calendar-dropdown">
+                <button onclick="downloadICS()" class="dropdown-item">
+                    <svg style="margin-left: -0.15em;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="1.2em" height="1.2em" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z"/></svg>
+                    Apple Calendar
+                </button>
+                <a id="googleLink" href="#" target="_blank" class="dropdown-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" width="1em" height="1em" fill="currentColor"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
+                    Google Calendar
+                </a>
+            </div>
+        </div>
         <p class="sub-title">BERKLEE'S 1ST J-POP ENSEMBLE</p>
     </section>
 
@@ -372,23 +486,41 @@
 
     <script>
         // Marquee Logic
-        const marqueeSpeed = 100; // Pixels per second
+        const marqueeSpeed = 200; // Pixels per second
         const track = document.querySelector('.marquee-track');
-        const originalContent = track.innerHTML; 
+        // Use trim() to avoid accumulating whitespace which can cause gaps
+        const originalContent = track.innerHTML.trim(); 
+
+        // Ensure page layout accounts for the fixed marquee height so
+        // elements like .title-wrapper are never visually overlapped.
+        function updateMarqueeSpacing() {
+            const marquee = document.querySelector('.marquee-container');
+            if (!marquee) return;
+            const h = marquee.offsetHeight;
+            document.documentElement.style.setProperty('--marquee-height', `${h}px`);
+        }
 
         function setupMarquee() {
-            // Reset to initial state
-            track.innerHTML = `<div class="marquee-content">${originalContent}</div>`;
-            const contentBlock = track.querySelector('.marquee-content');
+            // Clear existing content
+            track.innerHTML = '';
             
-            // Fill screen
-            let contentWidth = contentBlock.offsetWidth;
-            while (contentWidth < window.innerWidth) {
+            // Create the first content block
+            const contentBlock = document.createElement('div');
+            contentBlock.className = 'marquee-content';
+            contentBlock.innerHTML = originalContent;
+            track.appendChild(contentBlock);
+            
+            // Fill it until it's definitely wider than the screen
+            // Using a buffer ensures we never run out of content during the loop reset
+            // Use getBoundingClientRect().width for sub-pixel precision to avoid jumps
+            while (contentBlock.getBoundingClientRect().width < window.innerWidth + 500) {
                 contentBlock.innerHTML += originalContent;
-                contentWidth = contentBlock.offsetWidth;
             }
             
-            // Create seamless loop duplicate
+            // Get the precise width of the content block
+            const contentWidth = contentBlock.getBoundingClientRect().width;
+            
+            // Create a duplicate for the seamless loop
             const cloneBlock = contentBlock.cloneNode(true);
             cloneBlock.setAttribute('aria-hidden', 'true');
             track.appendChild(cloneBlock);
@@ -397,16 +529,29 @@
             const duration = contentWidth / marqueeSpeed;
             
             gsap.killTweensOf(track);
-            gsap.to(track, {
-                x: -contentWidth,
-                duration: duration,
-                ease: "none",
-                repeat: -1,
-                overwrite: true
-            });
+            gsap.fromTo(track, 
+                { x: 0 },
+                {
+                    x: -contentWidth,
+                    duration: duration,
+                    ease: "none",
+                    repeat: -1,
+                    overwrite: true
+                }
+            );
+            
+            // Update spacing after marquee has been laid out/animated
+            updateMarqueeSpacing();
         }
 
         setupMarquee();
+
+        // Ensure spacing isCorrect after load and when fonts finish loading
+        updateMarqueeSpacing();
+        window.addEventListener('load', updateMarqueeSpacing);
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(updateMarqueeSpacing).catch(() => {});
+        }
 
         let resizeTimer;
         window.addEventListener('resize', () => {
@@ -422,6 +567,7 @@
             
             // If cracked, don't play the bounce animation or reset it?
             // Let's just play it on the wrapper.
+            if (titleWrapper.classList.contains("cracked")) return;
             
             // 杀死所有正在进行的动画，防止堆叠
             gsap.killTweensOf(titleWrapper);
@@ -484,7 +630,9 @@
         const crackParts = document.querySelectorAll(".crack-part");
         const handwrittenTitle = document.querySelector(".handwritten-title");
 
+        /*
         // Small WebAudio crack sound generator (no external asset required)
+        // Commented out per request to disable sound-related functionality.
         let _audioCtx = null;
         function playCrackSound() {
             try {
@@ -541,14 +689,15 @@
                 console.warn('playCrackSound failed', e);
             }
         }
+        */
 
         // Shared function to play crack/open or reset animation
         function playCrack() {
             if (!titleWrapper.classList.contains("cracked")) {
                 titleWrapper.classList.add("cracked");
 
-                // play crack sound
-                playCrackSound();
+                // play crack sound (disabled)
+                // playCrackSound();
 
                 // 播放破裂動畫（左右移動后再淡出）
                 gsap.to(crackParts[0], {
@@ -609,7 +758,11 @@
         }
 
         // Desktop double-click
-        titleWrapper.addEventListener("dblclick", playCrack);
+        let _ignoreNextDblClick = false;
+        titleWrapper.addEventListener("dblclick", function() {
+            if (_ignoreNextDblClick) return;
+            playCrack();
+        });
 
         // Mobile: detect double-tap via touchend (two taps within 400ms)
         let _lastTap = 0;
@@ -620,6 +773,10 @@
                 e.preventDefault();
                 playCrack();
                 _lastTap = 0; // reset
+                
+                // Prevent subsequent dblclick event
+                _ignoreNextDblClick = true;
+                setTimeout(() => { _ignoreNextDblClick = false; }, 500);
             } else {
                 _lastTap = now;
             }
@@ -683,6 +840,79 @@
             clearTimeout(bgResizeTimer);
             bgResizeTimer = setTimeout(initBackgroundText, 250);
         });
+
+        // --- Calendar Functionality ---
+        const eventConfig = {
+            title: "TAMAGO J-pop Ensemble",
+            description: "Live performance by TAMAGO - Berklee's 1st J-pop ensemble!",
+            location: "David Friend Recital Hall, 921 Boylston St, Boston, MA 02115, United States",
+            startUTC: "20251205T213000Z", 
+            endUTC:   "20251205T223000Z"
+        };
+
+        function toggleCalendarDropdown() {
+            document.getElementById("calendarDropdown").classList.toggle("show");
+        }
+
+        // Close dropdown when interacting outside the calendar wrapper.
+        // Support click, pointerdown and touchstart so mobile taps work reliably.
+        function handleOutsideInteraction(event) {
+            // If the interaction started inside `.calendar-wrapper`, do nothing (keep it open)
+            if (event.target && event.target.closest && event.target.closest('.calendar-wrapper')) return;
+
+            var dropdowns = document.getElementsByClassName("calendar-dropdown");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+
+        // Use multiple event types for broad device support.
+        window.addEventListener('click', handleOutsideInteraction);
+        window.addEventListener('pointerdown', handleOutsideInteraction);
+        window.addEventListener('touchstart', handleOutsideInteraction, { passive: true });
+
+        function downloadICS() {
+            const icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Tamago Band//Flyer//EN',
+                'CALSCALE:GREGORIAN',
+                'BEGIN:VEVENT',
+                `SUMMARY:${eventConfig.title}`,
+                `DTSTART:${eventConfig.startUTC}`,
+                `DTEND:${eventConfig.endUTC}`,
+                `LOCATION:${eventConfig.location.replace(/,/g, '\\,')}`,
+                `DESCRIPTION:${eventConfig.description}`,
+                'STATUS:CONFIRMED',
+                'SEQUENCE:0',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'tamago_performance.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function setGoogleLink() {
+            const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
+            const text = `&text=${encodeURIComponent(eventConfig.title)}`;
+            const dates = `&dates=${eventConfig.startUTC}/${eventConfig.endUTC}`;
+            const details = `&details=${encodeURIComponent(eventConfig.description)}`;
+            const location = `&location=${encodeURIComponent(eventConfig.location)}`;
+            
+            const link = document.getElementById('googleLink');
+            if(link) link.href = baseUrl + text + dates + details + location;
+        }
+
+        setGoogleLink();
     </script>
 </body>
 </html>
