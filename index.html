@@ -892,13 +892,36 @@
                 'END:VCALENDAR'
             ].join('\r\n');
 
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'tamago_performance.ics');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Detect iOS
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+            if (isIOS) {
+                // On iOS, use a Data URI and simulate a link click with target="_self"
+                // This is the most reliable way to trigger the native Calendar "Add Event" prompt
+                const dataUrl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
+                
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.setAttribute('download', 'tamago_performance.ics');
+                link.target = '_self'; // Critical for iOS
+                
+                // Use dispatchEvent for better compatibility
+                const evt = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: false
+                });
+                link.dispatchEvent(evt);
+            } else {
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'tamago_performance.ics');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
         }
 
         function setGoogleLink() {
