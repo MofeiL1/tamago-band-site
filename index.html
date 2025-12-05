@@ -1,44 +1,36 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAMAGO | Berklee J-Pop Ensemble</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TAMAGO SETLIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Rubik:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts for the background text if needed, reusing Rubik/Mochiy is fine too -->
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DotGothic16&family=Zen+Kurenaido&display=swap" rel="stylesheet">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
     <style>
         :root {
-            --tamago-blue: #00ADF0;
-            --tamago-yellow: #FFF100;
-            --tamago-white: #FFFFFF;
+            --poster-blue: #00BFFF; /* Deep Sky Blue */
+            --poster-white: #ffffff;
+            --poster-shadow: #007bb5;
+            --block-color: #2a2a2a;
+            --tamago-yellow: #FFF100; /* Brought over for calendar accents */
         }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        
         body {
-            background-color: var(--tamago-blue);
-            color: var(--tamago-white);
-            font-family: 'Dela Gothic One', sans-serif;
+            background-color: var(--poster-blue);
+            font-family: 'Rubik', sans-serif;
+            color: var(--poster-white);
+            overflow: hidden; /* Lock to single screen */
+            touch-action: none;
         }
 
-        /* 背景文字层 */
+        .font-jp {
+            font-family: 'Mochiy Pop One', sans-serif;
+        }
+
+        /* --- Background Text Layer (Ported) --- */
         .background-text-layer {
             position: fixed;
             top: 50%;
@@ -46,23 +38,24 @@
             width: 200vmax;
             height: 200vmax;
             transform: translate(-50%, -50%) rotate(-30deg);
-            z-index: 0;
+            z-index: 0; /* Lowest level */
             display: flex;
             flex-direction: column;
             justify-content: center;
             pointer-events: none;
-            opacity: 1;
+            opacity: 0.15; /* Subtle blend */
         }
 
         .background-text-line {
-            font-size: 24vh;
+            font-family: 'Dela Gothic One', sans-serif; /* Use the font from the original file */
+            font-size: 15vh; /* Adjusted size for mobile balance */
             line-height: 1;
             white-space: nowrap;
             color: transparent;
-            -webkit-text-stroke: 0.07em #2dc4f1;
+            -webkit-text-stroke: 2px #ffffff; /* White stroke matches the theme */
             display: flex;
             width: 100%;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.1em;
         }
 
         .background-text-item {
@@ -78,338 +71,139 @@
             to { transform: translateX(-100%); }
         }
 
-        /* 主容器 - 确保内容居中 */
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            width: 100%;
-            min-height: 100vh;
+        /* --- Existing Animations --- */
+        /* Glitch Animation for the censored blocks */
+        @keyframes glitch {
+            0% { opacity: 1; transform: translateY(0); }
+            5% { opacity: 0.9; transform: translateY(-1px); }
+            10% { opacity: 1; transform: translateY(2px); }
+            15% { opacity: 1; transform: translateY(-0.5px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(1.5px); }
+            90% { opacity: 0.6; transform: translateY(-1px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* 顶部无限滚动条 */
+        .censored-block {
+            display: inline-block;
+            animation: glitch 2.5s infinite steps(2, jump-none) alternate-reverse;
+            color: transparent;
+            background: var(--block-color);
+            line-height: 0.8;
+            padding: 0 2px;
+            filter: none !important; 
+            text-shadow: none !important;
+            -webkit-text-stroke: 0 !important;
+        }
+
+        /* Float animation for background eggs */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .bg-egg {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 1; /* Sit just above text layer */
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Marquee Animation */
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
         .marquee-container {
-            background: var(--tamago-white);
-            color: var(--tamago-blue);
-            padding: 1.5vh 0;
             overflow: hidden;
             white-space: nowrap;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            border-bottom: 0.5vh solid var(--tamago-yellow);
-            width: 100%;
         }
-
-        .marquee-track {
-            display: flex;
-            width: max-content;
-        }
-
+        
         .marquee-content {
-            display: flex;
-            flex-shrink: 0;
-        }
-
-        .marquee-text {
             display: inline-block;
-            font-size: 2.5vh;
-            padding-right: 1vh;
-            white-space: nowrap;
+            animation: marquee 15s linear infinite;
         }
 
-        /* 主视觉区域 */
-        .hero-section {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            width: 100%;
-            /* Reserve space at the top equal to the marquee's actual height so
-               the title-wrapper's top is never overlapped by the fixed marquee. */
-            padding: var(--marquee-height, 0px) 2vh 0;
-            min-height: calc(100vh - var(--marquee-height, 0px));
-            box-sizing: border-box;
+        /* Sticker look for the setlist */
+        .paper-texture {
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 29px, #e5e5f7 29px, #e5e5f7 30px);
+            background-size: 100% 30px;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
         }
 
-        .main-title {
-            font-size: 24vh;
-            line-height: 0.85;
-            text-transform: uppercase;
-            font-weight: lighter;
-            z-index: 2;
-            text-shadow: 
-                0.05em 0.05em 0 var(--tamago-blue),
-                0.1em 0.1em 0 var(--tamago-yellow);
-            letter-spacing: 0;
-            word-break: break-word;
-            hyphens: auto;
-            max-height: none;
-            overflow: visible;
-            padding: 1vh;
-        }
-
-        .sub-title {
-            font-size: 5vh;
-            margin-top: 2vh;
-            font-family: 'Dela Gothic One', sans-serif;
-            padding: 0 2vh;
-            line-height: 1.1;
-            max-width: none;
-            overflow: visible;
-            text-overflow: clip;
-        }
-
-        /* 波纹装饰 */
-        .ripple-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .ripple-bg {
-            position: absolute;
-            border: 0.8vh solid var(--tamago-yellow);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0.6;
-            transform-origin: center center;
-        }
-
-        .ripple-bg.ring-1 {
-            width: 60vh;
-            height: 72vh;
-        }
-
-        .ripple-bg.ring-2 {
-            width: 50vh;
-            height: 60vh;
-        }
-
-        .ripple-bg.ring-3 {
-            width: 40vh;
-            height: 48vh;
-        }
-
-        .ripple-bg.ring-4 {
-            width: 30vh;
-            height: 36vh;
-        }
-
-        .ripple-bg.ring-5 {
-            width: 20vh;
-            height: 24vh;
-        }
-
-        .ripple-bg.ring-6 {
-            width: 10vh;
-            height: 12vh;
-        }
-
-        .ripple-bg.ring-7 {
-            width: 70vh;
-            height: 84vh;
-        }
-
-        /* 成员照片容器 */
-        .member-showcase {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding: 8vh 5vh;
-            margin-bottom: 5vh;
-        }
-
-        .egg-carton-img {
-            width: 60vh;
-            max-width: none;
-            border: 0.8vh solid var(--tamago-white);
-            border-radius: 3vh;
-            display: block;
-            transform: rotate(-2deg);
-        }
-
-        /* Title Crack Effect */
-        .title-wrapper {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            margin: 0 auto; /* Ensure centering */
-            padding: 2vh 0;
-            overflow: visible;
-        }
-
-        .title-placeholder {
-            visibility: hidden;
-            pointer-events: none;
-            font-size: 24vh;
-            line-height: 0.85;
-            text-transform: uppercase;
-            font-weight: lighter;
-            padding: 1vh;
-            /* Keep layout space */
-        }
-
-        .crack-part {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* transition removed to let GSAP handle animations */
-            font-size: 24vh;
-            line-height: 0.85;
-            text-transform: uppercase;
-            font-weight: lighter;
-            text-shadow: 
-                0.05em 0.05em 0 var(--tamago-blue),
-                0.1em 0.1em 0 var(--tamago-yellow);
-            letter-spacing: 0;
-            padding: 1vh;
-            margin: 0;
-            pointer-events: auto;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .crack-part.left {
-            clip-path: polygon(0% 0%, 56% 0%, 46% 25%, 56% 50%, 46% 75%, 56% 100%, 0% 100%);
-            z-index: 2;
-        }
-
-        .crack-part.right {
-            clip-path: polygon(54% 0%, 100% 0%, 100% 100%, 54% 100%, 44% 75%, 54% 50%, 44% 25%);
-            z-index: 2;
-        }
-
-        .title-wrapper.cracked .crack-part.left {
-            pointer-events: none;
-        }
-
-        .title-wrapper.cracked .crack-part.right {
-            pointer-events: none;
-        }
-
-        .handwritten-title {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.5) rotate(-5deg);
-            font-family: 'Zen Kurenaido', sans-serif;
-            font-size: 12vh;
-            color: var(--tamago-yellow);
-            text-shadow: 0.4vh 0.4vh 0 var(--tamago-blue);
-            opacity: 0;
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transition-delay: 0.1s;
-            z-index: 1;
-            white-space: nowrap;
-        }
-
-        .title-wrapper.cracked .handwritten-title {
-            transform: translate(-50%, -50%) scale(1) rotate(-5deg);
-            opacity: 1;
-        }
-
-        /* --- Calendar Button Styles --- */
+        /* --- Calendar Button Styles (Integrated Style) --- */
         .calendar-wrapper {
             position: relative;
-            z-index: 10;
+            z-index: 30; /* High z-index to interact */
+            margin-top: 10px;
         }
 
         .calendar-btn {
-            background-color: var(--tamago-yellow);
-            color: var(--tamago-blue);
-            font-family: 'Dela Gothic One', sans-serif;
-            padding: 1.5vh 4vh;
-            font-size: 2.5vh;
-            border: 0.4vh solid var(--tamago-white);
-            border-radius: 5vh;
+            background-color: black;
+            color: white;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+            padding: 10px 24px;
+            font-size: 1rem;
+            border: 3px solid white;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-transform: uppercase;
-            box-shadow: 0.4vh 0.4vh 0 var(--tamago-blue);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .calendar-btn:hover {
-            transform: translate(-0.2vh, -0.2vh);
-            box-shadow: 0.6vh 0.6vh 0 var(--tamago-blue);
-            background-color: var(--tamago-white);
+        .calendar-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
         }
 
         .calendar-dropdown {
             display: flex;
             position: absolute;
-            top: 50%;
+            bottom: 110%; /* Show above button */
             left: 50%;
-            
-            /* 初始状态：隐藏 */
-            transform: translate(-50%, -50%) scale(0.5);
+            transform: translate(-50%, 10px) scale(0.9);
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-
-            background-color: var(--tamago-white);
-                min-width: 42vh;
-            border: 0.4vh solid var(--tamago-blue);
-            border-radius: 1vh;
-            overflow: hidden;
+            background-color: white;
+            min-width: 240px;
+            border: 3px solid black;
             flex-direction: column;
-            box-shadow: 0.8vh 0.8vh 0 rgba(0,0,0,0.2);
-            transform-origin: center center;
-            z-index: 20;
-
-            /* 消失动画 */
-            transition: 
-                opacity 0.2s ease-out,
-                transform 0.2s ease-out,
-                visibility 0.2s;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.3);
+            z-index: 40;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .calendar-dropdown.show {
             visibility: visible;
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, 0) scale(1);
             pointer-events: auto;
-
-            /* 出现动画 */
-            transition: 
-                opacity 0.4s ease,
-                transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                visibility 0s;
         }
 
         .dropdown-item {
-            color: var(--tamago-blue);
-            padding: 2.4vh 3vh; /* 增加内边距，让按钮更大 */
+            color: black;
+            padding: 16px;
             text-decoration: none;
-            display: flex; /* 使用 flex 便于垂直水平居中 */
+            display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 1vh;
+            justify-content: center;
+            gap: 10px;
             border: none;
             background: none;
             width: 100%;
-            min-height: 6.5vh; /* 保证按钮高度 */
             cursor: pointer;
-            font-family: 'Dela Gothic One', sans-serif;
-            font-size: 2.6vh; /* 放大字体 */
-            line-height: 1.1;
-            transition: background-color 0.18s, transform 0.18s;
-            border-bottom: 0.35vh solid var(--tamago-blue);
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border-bottom: 2px solid #eee;
         }
 
         .dropdown-item:last-child {
@@ -417,394 +211,159 @@
         }
 
         .dropdown-item:hover {
-            background-color: var(--tamago-yellow);
-            transform: translateY(-0.2vh);
+            background-color: var(--poster-blue);
+            color: white;
         }
-
-        /* 动画关键帧 - Removed as GSAP handles marquee */
-        /* @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        } */
-
-        /* 响应式设计 - Removed as per request to base everything on height */
-
+        
+        .dropdown-item svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
     </style>
 </head>
-<body>
+<body class="h-screen w-screen flex flex-col relative">
+
+    <!-- 1. Background Text Layer (Added) -->
     <div class="background-text-layer"></div>
-    <div class="marquee-container">
-        <div class="marquee-track">
-            <span class="marquee-text">DEC 5TH 4:30 PM @ DAVID FRIEND RECITAL HALL /// TAMAGO ///</span>
+
+    <!-- Background Decorative Elements (Abstract Eggs) -->
+    <div class="bg-egg w-64 h-80 bg-white rounded-[50%/60%_60%_40%_40%] -top-20 -left-20 rotate-12 delay-100"></div>
+    <div class="bg-egg w-48 h-60 bg-white rounded-[50%/60%_60%_40%_40%] bottom-10 -right-10 -rotate-12 delay-700"></div>
+    <div class="bg-egg w-32 h-40 bg-white rounded-[50%/60%_60%_40%_40%] top-1/3 right-10 rotate-45 delay-300"></div>
+
+    <!-- Top Marquee -->
+    <div class="w-full bg-black text-white py-1 z-20 border-b-4 border-white shadow-md relative">
+        <div class="marquee-container">
+            <div class="marquee-content font-bold text-lg tracking-widest uppercase">
+                BERKLEE J-POP ENSEMBLE ★ TAMAGO ★ LIVE PERFORMANCE ★ BERKLEE J-POP ENSEMBLE ★ TAMAGO ★
+            </div>
         </div>
     </div>
 
-    <section class="hero-section">
-        <div class="ripple-container">
-            <div class="ripple-bg ring-7"></div>
-            <div class="ripple-bg ring-1"></div>
-            <div class="ripple-bg ring-2"></div>
-            <div class="ripple-bg ring-3"></div>
-            <div class="ripple-bg ring-4"></div>
-            <div class="ripple-bg ring-5"></div>
-            <div class="ripple-bg ring-6"></div>
-        </div>
-
-        <div class="title-wrapper">
-            <div class="title-placeholder">
-                た<br>ま<br>ご
-            </div>
-            <h1 class="main-title crack-part left">
-                た<br>ま<br>ご
+    <!-- Main Content Container -->
+    <main class="flex-1 flex flex-col items-center justify-between p-4 z-10 relative h-full max-h-screen">
+        
+        <!-- Header / Band Name -->
+        <header class="text-center mt-2 animate-bounce flex-none">
+            <h2 class="text-xl md:text-2xl font-bold tracking-tighter uppercase drop-shadow-md transform -rotate-2">
+                J-POP ENSEMBLE
+            </h2>
+            <h1 class="text-6xl md:text-7xl font-jp font-bold text-white drop-shadow-[4px_4px_0_rgba(0,0,0,0.5)] leading-none mt-[-5px]">
+                TAMAGO
             </h1>
-            <h1 class="main-title crack-part right">
-                た<br>ま<br>ご
-            </h1>
-            <div class="handwritten-title">
-                Tamago
+            <div class="text-sm font-jp bg-white text-blue-500 inline-block px-2 rotate-2 font-semibold mt-1 shadow-lg">
+                「たまご」
+            </div>
+        </header>
+
+        <!-- Setlist Card -->
+        <div class="w-full max-w-sm flex-shrink transform rotate-1 transition-transform hover:rotate-0 duration-300 my-2">
+            <div class="bg-white text-black p-5 rounded-sm paper-texture relative shadow-xl">
+                <!-- Tape effect -->
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-32 h-8 bg-yellow-300 opacity-80 rotate-1 shadow-sm"></div>
+
+                <h3 class="text-center font-bold text-2xl mb-3 border-b-4 border-black inline-block w-full">SETLIST</h3>
+                
+                <ul class="space-y-1 text-lg md:text-xl font-semibold font-jp leading-tight">
+                    <li class="flex items-center">
+                        <span class="mr-2 text-blue-500">01.</span> 
+                        <span>P<span class="censored-block">███</span> Love</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="mr-2 text-blue-500">02.</span> 
+                        <span>み<span class="censored-block">████</span>雨</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="mr-2 text-blue-500">03.</span> 
+                        <span>誕生日<span class="censored-block">█████</span>１</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="mr-2 text-blue-500">04.</span> 
+                        <span><span class="censored-block">█</span>劇</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="mr-2 text-blue-500">05.</span> 
+                        <span><span class="censored-block">██</span>子</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="mr-2 text-blue-500">06.</span> 
+                        <span><span class="censored-block">███</span> Doe</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="mr-2 text-blue-500">07.</span> 
+                        <span><span class="censored-block">████</span>孤独<span class="censored-block">███</span>惑星</span>
+                    </li>
+                </ul>
+                
+                <div class="absolute bottom-2 right-2 opacity-50 rotate-[-10deg]">
+                    <svg width="60" height="60" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" stroke="red" stroke-width="4" fill="none" />
+                        <text x="50" y="55" text-anchor="middle" fill="red" font-size="20" font-weight="bold" transform="rotate(-15 50 50)">SECRET</text>
+                    </svg>
+                </div>
             </div>
         </div>
-        <div class="calendar-wrapper">
-            <button onclick="toggleCalendarDropdown()" class="calendar-btn">
-                Add to Calendar
-            </button>
-            <div id="calendarDropdown" class="calendar-dropdown">
-                <button onclick="downloadICS()" class="dropdown-item">
-                    <svg style="margin-left: -0.15em;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="1.2em" height="1.2em" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z"/></svg>
-                    Apple Calendar
-                </button>
-                <a id="googleLink" href="#" target="_blank" class="dropdown-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" width="1em" height="1em" fill="currentColor"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
-                    Google Calendar
-                </a>
+
+        <!-- Footer Info & Calendar -->
+        <footer class="w-full text-center pb-4 flex-none z-30">
+            <div class="flex flex-col items-center justify-center space-y-3">
+                <div class="bg-black text-white px-6 py-1 text-2xl font-bold italic transform skew-x-[-10deg] shadow-[4px_4px_0_#fff]">
+                    4:30 PM TODAY
+                </div>
+                
+                <div class="text-base font-semibold uppercase tracking-wide drop-shadow-md leading-tight">
+                    David Friend Recital Hall
+                </div>
+
+                <!-- 2. Calendar Button (Added) -->
+                <div class="calendar-wrapper">
+                    <button onclick="toggleCalendarDropdown()" class="calendar-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                        </svg>
+                        Add to Calendar
+                    </button>
+                    <div id="calendarDropdown" class="calendar-dropdown">
+                        <button onclick="downloadICS()" class="dropdown-item">
+                            <!-- Apple Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z"/></svg>
+                            Apple Calendar
+                        </button>
+                        <a id="googleLink" href="#" target="_blank" class="dropdown-item">
+                            <!-- Google Icon -->
+                            <svg style="height: 1.2em;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" fill="currentColor"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
+                            Google Calendar
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <p class="sub-title">BERKLEE'S 1ST J-POP ENSEMBLE</p>
-    </section>
+        </footer>
 
-
+    </main>
 
     <script>
-        // Marquee Logic
-        const marqueeSpeed = 200; // Pixels per second
-        const track = document.querySelector('.marquee-track');
-        // Use trim() to avoid accumulating whitespace which can cause gaps
-        const originalContent = track.innerHTML.trim(); 
-
-        // Ensure page layout accounts for the fixed marquee height so
-        // elements like .title-wrapper are never visually overlapped.
-        function updateMarqueeSpacing() {
-            const marquee = document.querySelector('.marquee-container');
-            if (!marquee) return;
-            const h = marquee.offsetHeight;
-            document.documentElement.style.setProperty('--marquee-height', `${h}px`);
-        }
-
-        function setupMarquee() {
-            // Clear existing content
-            track.innerHTML = '';
-            
-            // Create the first content block
-            const contentBlock = document.createElement('div');
-            contentBlock.className = 'marquee-content';
-            contentBlock.innerHTML = originalContent;
-            track.appendChild(contentBlock);
-            
-            // Fill it until it's definitely wider than the screen
-            // Using a buffer ensures we never run out of content during the loop reset
-            // Use getBoundingClientRect().width for sub-pixel precision to avoid jumps
-            while (contentBlock.getBoundingClientRect().width < window.innerWidth + 500) {
-                contentBlock.innerHTML += originalContent;
-            }
-            
-            // Get the precise width of the content block
-            const contentWidth = contentBlock.getBoundingClientRect().width;
-            
-            // Create a duplicate for the seamless loop
-            const cloneBlock = contentBlock.cloneNode(true);
-            cloneBlock.setAttribute('aria-hidden', 'true');
-            track.appendChild(cloneBlock);
-            
-            // Animate
-            const duration = contentWidth / marqueeSpeed;
-            
-            gsap.killTweensOf(track);
-            gsap.fromTo(track, 
-                { x: 0 },
-                {
-                    x: -contentWidth,
-                    duration: duration,
-                    ease: "none",
-                    repeat: -1,
-                    overwrite: true
-                }
-            );
-            
-            // Update spacing after marquee has been laid out/animated
-            updateMarqueeSpacing();
-        }
-
-        setupMarquee();
-
-        // Ensure spacing isCorrect after load and when fonts finish loading
-        updateMarqueeSpacing();
-        window.addEventListener('load', updateMarqueeSpacing);
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(updateMarqueeSpacing).catch(() => {});
-        }
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(setupMarquee, 250);
-        });
-
-        // GSAP 动画逻辑
-
-        // 1. 让标题文字像果冻一样Q弹出现
-        function playTitleAnimation() {
-            const titleWrapper = document.querySelector(".title-wrapper");
-            
-            // If cracked, don't play the bounce animation or reset it?
-            // Let's just play it on the wrapper.
-            if (titleWrapper.classList.contains("cracked")) return;
-            
-            // 杀死所有正在进行的动画，防止堆叠
-            gsap.killTweensOf(titleWrapper);
-            
-            // 重置位置并立刻播放入场动画
-            gsap.set(titleWrapper, { y: 100, opacity: 0 });
-            gsap.to(titleWrapper, {
-                duration: 1.5,
-                y: 0,
-                opacity: 1,
-                ease: "elastic.out(1, 0.3)"
-            });
-        }
-
-        // 初始播放动画（使用 fromTo 确保元素初始状态正确）
-        gsap.fromTo(".title-wrapper", 
-            { y: 100, opacity: 0 },
-            {
-                duration: 1.5,
-                y: 0,
-                opacity: 1,
-                ease: "elastic.out(1, 0.3)"
-            }
-        );
-
-        // 为标题添加点击事件
-        document.querySelector(".title-wrapper").addEventListener("click", playTitleAnimation);
-
-        // 2. 让背景的黄色圆圈不断旋转且呼吸
-        gsap.to(".ripple-bg", {
-            duration: 20,
-            rotation: 360,
-            repeat: -1,
-            ease: "linear",
-            transformOrigin: "center center"
-        });
-        
-        gsap.to(".ripple-bg", {
-            duration: 2,
-            scale: 1.1,
-            yoyo: true,
-            repeat: -1,
-            ease: "sine.inOut",
-            stagger: 0.5,
-            transformOrigin: "center center"
-        });
-
-        // 3. 让照片轻轻摇晃 (闲置动画)
-        gsap.to(".egg-carton-img", {
-            duration: 3,
-            rotation: 2,
-            yoyo: true,
-            repeat: -1,
-            ease: "sine.inOut",
-            transformOrigin: "center center"
-        });
-
-        // 标题破裂效果动画
-        const titleWrapper = document.querySelector(".title-wrapper");
-        const crackParts = document.querySelectorAll(".crack-part");
-        const handwrittenTitle = document.querySelector(".handwritten-title");
-
-        /*
-        // Small WebAudio crack sound generator (no external asset required)
-        // Commented out per request to disable sound-related functionality.
-        let _audioCtx = null;
-        function playCrackSound() {
-            try {
-                if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const ctx = _audioCtx;
-
-                // Short noise burst
-                const bufferSize = ctx.sampleRate * 0.1; // 100ms
-                const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-                const data = noiseBuffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * Math.exp(-3 * i / bufferSize);
-                }
-                const noise = ctx.createBufferSource();
-                noise.buffer = noiseBuffer;
-                const noiseGain = ctx.createGain();
-                noiseGain.gain.value = 0.8;
-
-                noise.connect(noiseGain);
-
-                // Short tonal click (oscillator) to add snap
-                const osc = ctx.createOscillator();
-                osc.type = 'square';
-                osc.frequency.value = 800;
-                const oscGain = ctx.createGain();
-                oscGain.gain.value = 0.0001;
-
-                // Master gain with quick envelope
-                const master = ctx.createGain();
-                master.gain.value = 0.0001;
-
-                noiseGain.connect(master);
-                oscGain.connect(master);
-                master.connect(ctx.destination);
-
-                const now = ctx.currentTime;
-                // oscillator envelope (very short click)
-                oscGain.gain.setValueAtTime(0.0001, now);
-                oscGain.gain.exponentialRampToValueAtTime(0.5, now + 0.002);
-                oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
-
-                // master envelope
-                master.gain.setValueAtTime(0.0001, now);
-                master.gain.exponentialRampToValueAtTime(1.0, now + 0.003);
-                master.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
-
-                osc.start(now);
-                osc.stop(now + 0.06);
-
-                noise.start(now);
-                noise.stop(now + 0.12);
-            } catch (e) {
-                // AudioContext may be blocked by browser autoplay policies; ignore gracefully
-                console.warn('playCrackSound failed', e);
-            }
-        }
-        */
-
-        // Shared function to play crack/open or reset animation
-        function playCrack() {
-            if (!titleWrapper.classList.contains("cracked")) {
-                titleWrapper.classList.add("cracked");
-
-                // play crack sound (disabled)
-                // playCrackSound();
-
-                // 播放破裂動畫（左右移動后再淡出）
-                gsap.to(crackParts[0], {
-                    duration: 0.8,
-                    x: -120,
-                    rotate: -25,
-                    ease: "expo.out"
-                });
-                gsap.to(crackParts[0], {
-                    duration: 0.5,
-                    opacity: 0,
-                    delay: 0.8,
-                    ease: "power1.out"
-                });
-
-                gsap.to(crackParts[1], {
-                    duration: 0.8,
-                    x: 120,
-                    rotate: 25,
-                    ease: "expo.out"
-                });
-                gsap.to(crackParts[1], {
-                    duration: 0.5,
-                    opacity: 0,
-                    delay: 0.8,
-                    ease: "power1.out"
-                });
-
-                // 手寫標題淡入
-                gsap.to(handwrittenTitle, {
-                    duration: 0.6,
-                    opacity: 1,
-                    scale: 1,
-                    rotate: -5,
-                    ease: "back.out(1.7)",
-                    delay: 0.2
-                });
-            } else {
-                // Reverse: handwritten shrinks first, then pieces close
-                titleWrapper.classList.remove("cracked");
-
-                gsap.to(handwrittenTitle, {
-                    duration: 0.4,
-                    opacity: 0,
-                    scale: 0.5,
-                    ease: "power2.in"
-                });
-
-                gsap.to(crackParts, {
-                    duration: 0.6,
-                    opacity: 1,
-                    x: 0,
-                    rotate: 0,
-                    ease: "power2.out",
-                    delay: 0.4
-                });
-            }
-        }
-
-        // Desktop double-click
-        let _ignoreNextDblClick = false;
-        titleWrapper.addEventListener("dblclick", function() {
-            if (_ignoreNextDblClick) return;
-            playCrack();
-        });
-
-        // Mobile: detect double-tap via touchend (two taps within 400ms)
-        let _lastTap = 0;
-        titleWrapper.addEventListener("touchend", function (e) {
-            const now = Date.now();
-            const delta = now - _lastTap;
-            if (delta > 0 && delta < 400) {
-                e.preventDefault();
-                playCrack();
-                _lastTap = 0; // reset
-                
-                // Prevent subsequent dblclick event
-                _ignoreNextDblClick = true;
-                setTimeout(() => { _ignoreNextDblClick = false; }, 500);
-            } else {
-                _lastTap = now;
-            }
-        }, { passive: false });
-
-        // Background Text Generation
+        // --- 1. Background Text Generation Logic (Ported & Adapted) ---
         function initBackgroundText() {
             const layer = document.querySelector('.background-text-layer');
             if (!layer) return;
             layer.innerHTML = '';
 
-            const fontSize = window.innerHeight * 0.24; // 24vh
-            const lineHeight = fontSize * 1.2;
-            // Use a large enough dimension to cover the rotated area
+            const fontSize = window.innerHeight * 0.15; // Adjusted size
+            const lineHeight = fontSize * 1.0;
             const totalHeight = Math.max(window.innerWidth, window.innerHeight) * 2.5; 
             const count = Math.ceil(totalHeight / lineHeight);
 
             const baseText = "日本音楽";
-            const repeatCount = 50; // Ensure it's wide enough
+            const repeatCount = 50; 
             const content = baseText.repeat(repeatCount);
             
             for (let i = 0; i < count; i++) {
                 const line = document.createElement('div');
                 line.className = 'background-text-line';
                 
-                // Stagger every other line by 2 characters (approx 2.4em with spacing)
+                // Stagger every other line
                 if (i % 2 !== 0) {
-                    line.style.transform = 'translateX(-2.4em)';
+                    line.style.transform = 'translateX(-1.5em)';
                 }
                 
                 const item1 = document.createElement('div');
@@ -820,11 +379,11 @@
                 layer.appendChild(line);
             }
 
-            // Calculate duration for constant speed (pixels per second)
+            // Calculate duration
             const firstItem = layer.querySelector('.background-text-item');
             if (firstItem) {
                 const width = firstItem.offsetWidth;
-                const speed = 100; // pixels per second
+                const speed = 80; // slightly slower
                 const duration = width / speed;
                 
                 const items = layer.querySelectorAll('.background-text-item');
@@ -841,37 +400,35 @@
             bgResizeTimer = setTimeout(initBackgroundText, 250);
         });
 
-        // --- Calendar Functionality ---
+
+        // --- 2. Calendar Logic (Ported) ---
+        // Config based on the Poster Info
         const eventConfig = {
-            title: "TAMAGO J-pop Ensemble",
-            description: "Live performance by TAMAGO - Berklee's 1st J-pop ensemble!",
-            location: "David Friend Recital Hall, 921 Boylston St, Boston, MA 02115, United States",
-            startUTC: "20251205T213000Z", 
-            endUTC:   "20251205T223000Z"
+            title: "TAMAGO J-pop Ensemble Live",
+            description: "Live performance by TAMAGO at Berklee.",
+            location: "David Friend Recital Hall, 921 Boylston St, Boston, MA 02115",
+            startUTC: "20251205T213000Z", // 2025-12-05 4:30PM EST is 21:30 UTC
+            endUTC:   "20251205T223000Z"  // 1 hour duration approx
         };
 
         function toggleCalendarDropdown() {
-            document.getElementById("calendarDropdown").classList.toggle("show");
+            const dropdown = document.getElementById("calendarDropdown");
+            dropdown.classList.toggle("show");
         }
 
-        // Close dropdown when interacting outside the calendar wrapper.
-        // Support click, pointerdown and touchstart so mobile taps work reliably.
         function handleOutsideInteraction(event) {
-            // If the interaction started inside `.calendar-wrapper`, do nothing (keep it open)
             if (event.target && event.target.closest && event.target.closest('.calendar-wrapper')) return;
 
-            var dropdowns = document.getElementsByClassName("calendar-dropdown");
-            for (var i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
+            const dropdowns = document.getElementsByClassName("calendar-dropdown");
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
                 if (openDropdown.classList.contains('show')) {
                     openDropdown.classList.remove('show');
                 }
             }
         }
 
-        // Use multiple event types for broad device support.
         window.addEventListener('click', handleOutsideInteraction);
-        window.addEventListener('pointerdown', handleOutsideInteraction);
         window.addEventListener('touchstart', handleOutsideInteraction, { passive: true });
 
         function downloadICS() {
@@ -897,25 +454,15 @@
                 'END:VCALENDAR'
             ].join('\r\n');
 
-            // Detect iOS
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
             if (isIOS) {
-                // On iOS, use a Data URI and simulate a link click with target="_self"
-                // This is the most reliable way to trigger the native Calendar "Add Event" prompt
                 const dataUrl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
-                
                 const link = document.createElement('a');
                 link.href = dataUrl;
                 link.setAttribute('download', 'tamago_performance.ics');
-                link.target = '_self'; // Critical for iOS
-                
-                // Use dispatchEvent for better compatibility
-                const evt = new MouseEvent('click', {
-                    view: window,
-                    bubbles: true,
-                    cancelable: false
-                });
+                link.target = '_self'; 
+                const evt = new MouseEvent('click', { view: window, bubbles: true, cancelable: false });
                 link.dispatchEvent(evt);
             } else {
                 const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
@@ -941,6 +488,19 @@
         }
 
         setGoogleLink();
+
+
+        // --- Visual Ripple Effect ---
+        document.addEventListener('touchstart', function(e) { createRipple(e); });
+        document.addEventListener('click', function(e) { createRipple(e); });
+
+        function createRipple(e) {
+            const items = document.querySelectorAll('li');
+            items.forEach(item => {
+                item.style.transform = `translateX(${Math.random() * 4 - 2}px)`;
+                setTimeout(() => item.style.transform = 'none', 200);
+            });
+        }
     </script>
 </body>
 </html>
