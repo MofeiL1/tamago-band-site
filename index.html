@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TAMAGO SETLIST</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Rubik:wght@500;700&display=swap" rel="stylesheet">
-    <!-- Google Fonts for the background text if needed, reusing Rubik/Mochiy is fine too -->
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
     
     <style>
@@ -15,44 +14,48 @@
             --poster-white: #ffffff;
             --poster-shadow: #007bb5;
             --block-color: #2a2a2a;
-            --tamago-yellow: #FFF100; /* Brought over for calendar accents */
+            --tamago-yellow: #FFF100; /* Bright Yellow */
         }
         
         body {
             background-color: var(--poster-blue);
             font-family: 'Rubik', sans-serif;
             color: var(--poster-white);
-            overflow: hidden; /* Lock to single screen */
-            touch-action: none;
+            /* Changed to min-height to allow scrolling */
+            min-height: 100dvh; 
+            width: 100%;
+            overflow-x: hidden; /* Keep horizontal hidden */
+            overflow-y: auto;   /* Allow vertical scroll */
+            /* Removed touch-action: none so user can scroll */
         }
 
         .font-jp {
             font-family: 'Mochiy Pop One', sans-serif;
         }
 
-        /* --- Background Text Layer (Ported) --- */
+        /* --- Background Text Layer --- */
         .background-text-layer {
             position: fixed;
             top: 50%;
             left: 50%;
-            width: 200vmax;
-            height: 200vmax;
+            width: 150vmax;
+            height: 150vmax;
             transform: translate(-50%, -50%) rotate(-30deg);
-            z-index: 0; /* Lowest level */
+            z-index: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
             pointer-events: none;
-            opacity: 0.15; /* Subtle blend */
+            opacity: 0.15;
         }
 
         .background-text-line {
-            font-family: 'Dela Gothic One', sans-serif; /* Use the font from the original file */
-            font-size: 15vh; /* Adjusted size for mobile balance */
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 12vh;
             line-height: 1;
             white-space: nowrap;
             color: transparent;
-            -webkit-text-stroke: 2px #ffffff; /* White stroke matches the theme */
+            -webkit-text-stroke: 2px #ffffff;
             display: flex;
             width: 100%;
             letter-spacing: 0.1em;
@@ -72,7 +75,6 @@
         }
 
         /* --- Existing Animations --- */
-        /* Glitch Animation for the censored blocks */
         @keyframes glitch {
             0% { opacity: 1; transform: translateY(0); }
             5% { opacity: 0.9; transform: translateY(-1px); }
@@ -97,7 +99,6 @@
             -webkit-text-stroke: 0 !important;
         }
 
-        /* Float animation for background eggs */
         @keyframes float {
             0% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(5deg); }
@@ -105,13 +106,12 @@
         }
 
         .bg-egg {
-            position: absolute;
+            position: fixed; /* Changed to fixed so they don't scroll weirdly relative to content */
             opacity: 0.1;
-            z-index: 1; /* Sit just above text layer */
+            z-index: 1;
             animation: float 6s ease-in-out infinite;
         }
 
-        /* Marquee Animation */
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
@@ -127,46 +127,46 @@
             animation: marquee 15s linear infinite;
         }
 
-        /* Sticker look for the setlist */
         .paper-texture {
             background-image: repeating-linear-gradient(0deg, transparent, transparent 29px, #e5e5f7 29px, #e5e5f7 30px);
             background-size: 100% 30px;
             box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
         }
 
-        /* --- Calendar Button Styles (Integrated Style) --- */
+        /* --- Calendar Button Styles --- */
         .calendar-wrapper {
             position: relative;
-            z-index: 30; /* High z-index to interact */
-            margin-top: 10px;
+            z-index: 30;
+            margin-top: 16px; /* Increased margin */
         }
 
         .calendar-btn {
-            background-color: black;
-            color: white;
+            background-color: var(--tamago-yellow);
+            color: black;
             font-family: 'Rubik', sans-serif;
-            font-weight: 700;
-            padding: 10px 24px;
-            font-size: 1rem;
-            border: 3px solid white;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+            font-weight: 900;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+            border: 4px solid black;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            white-space: nowrap;
         }
 
         .calendar-btn:active {
             transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
         }
 
         .calendar-dropdown {
             display: flex;
             position: absolute;
-            bottom: 110%; /* Show above button */
+            bottom: 110%;
             left: 50%;
             transform: translate(-50%, 10px) scale(0.9);
             opacity: 0;
@@ -174,9 +174,9 @@
             pointer-events: none;
             background-color: white;
             min-width: 240px;
-            border: 3px solid black;
+            border: 4px solid black;
             flex-direction: column;
-            box-shadow: 6px 6px 0 rgba(0,0,0,0.3);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
             z-index: 40;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -221,18 +221,18 @@
         }
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col relative">
+<body class="flex flex-col relative min-h-screen">
 
-    <!-- 1. Background Text Layer (Added) -->
+    <!-- 1. Background Text Layer -->
     <div class="background-text-layer"></div>
 
-    <!-- Background Decorative Elements (Abstract Eggs) -->
+    <!-- Background Decorative Elements -->
     <div class="bg-egg w-64 h-80 bg-white rounded-[50%/60%_60%_40%_40%] -top-20 -left-20 rotate-12 delay-100"></div>
     <div class="bg-egg w-48 h-60 bg-white rounded-[50%/60%_60%_40%_40%] bottom-10 -right-10 -rotate-12 delay-700"></div>
     <div class="bg-egg w-32 h-40 bg-white rounded-[50%/60%_60%_40%_40%] top-1/3 right-10 rotate-45 delay-300"></div>
 
     <!-- Top Marquee -->
-    <div class="w-full bg-black text-white py-1 z-20 border-b-4 border-white shadow-md relative">
+    <div class="w-full bg-black text-white py-1 z-20 border-b-4 border-white shadow-md relative shrink-0">
         <div class="marquee-container">
             <div class="marquee-content font-bold text-lg tracking-widest uppercase">
                 BERKLEE J-POP ENSEMBLE ★ TAMAGO ★ LIVE PERFORMANCE ★ BERKLEE J-POP ENSEMBLE ★ TAMAGO ★
@@ -241,62 +241,63 @@
     </div>
 
     <!-- Main Content Container -->
-    <main class="flex-1 flex flex-col items-center justify-between p-4 z-10 relative h-full max-h-screen">
+    <!-- Changed: justify-start + gap-8 allows natural flow and scrolling without forcing spacing that clips -->
+    <main class="flex-1 flex flex-col items-center justify-start py-8 gap-8 z-10 relative w-full overflow-visible">
         
         <!-- Header / Band Name -->
-        <header class="text-center mt-2 animate-bounce flex-none">
-            <h2 class="text-xl md:text-2xl font-bold tracking-tighter uppercase drop-shadow-md transform -rotate-2">
+        <header class="text-center animate-bounce flex-none">
+            <h2 class="text-lg md:text-2xl font-bold tracking-tighter uppercase drop-shadow-md transform -rotate-2">
                 J-POP ENSEMBLE
             </h2>
-            <h1 class="text-6xl md:text-7xl font-jp font-bold text-white drop-shadow-[4px_4px_0_rgba(0,0,0,0.5)] leading-none mt-[-5px]">
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-jp font-bold text-white drop-shadow-[3px_3px_0_rgba(0,0,0,0.5)] leading-none mt-[-2px]">
                 TAMAGO
             </h1>
-            <div class="text-sm font-jp bg-white text-blue-500 inline-block px-2 rotate-2 font-semibold mt-1 shadow-lg">
+            <div class="text-xs md:text-sm font-jp bg-white text-blue-500 inline-block px-2 rotate-2 font-semibold mt-1 shadow-lg">
                 「たまご」
             </div>
         </header>
 
         <!-- Setlist Card -->
-        <div class="w-full max-w-sm flex-shrink transform rotate-1 transition-transform hover:rotate-0 duration-300 my-2">
-            <div class="bg-white text-black p-5 rounded-sm paper-texture relative shadow-xl">
+        <div class="w-full max-w-[90%] sm:max-w-sm flex-shrink-0 transform rotate-1 transition-transform hover:rotate-0 duration-300">
+            <div class="bg-white text-black p-4 md:p-6 rounded-sm paper-texture relative shadow-xl">
                 <!-- Tape effect -->
-                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-32 h-8 bg-yellow-300 opacity-80 rotate-1 shadow-sm"></div>
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-24 md:w-32 h-6 md:h-8 bg-yellow-300 opacity-80 rotate-1 shadow-sm"></div>
 
-                <h3 class="text-center font-bold text-2xl mb-3 border-b-4 border-black inline-block w-full">SETLIST</h3>
+                <h3 class="text-center font-bold text-xl md:text-2xl mb-2 md:mb-4 border-b-4 border-black inline-block w-full">SETLIST</h3>
                 
-                <ul class="space-y-1 text-lg md:text-xl font-semibold font-jp leading-tight">
+                <ul class="space-y-1 text-base sm:text-lg md:text-xl font-semibold font-jp leading-tight">
                     <li class="flex items-center">
                         <span class="mr-2 text-blue-500">01.</span> 
-                        <span>P<span class="censored-block">███</span> Love</span>
+                        <span class="truncate">P<span class="censored-block">███</span> Love</span>
                     </li>
                     <li class="flex items-center">
                         <span class="mr-2 text-blue-500">02.</span> 
-                        <span>み<span class="censored-block">████</span>雨</span>
+                        <span class="truncate">み<span class="censored-block">████</span>雨</span>
                     </li>
                     <li class="flex items-center">
                         <span class="mr-2 text-blue-500">03.</span> 
-                        <span>誕生日<span class="censored-block">█████</span>１</span>
+                        <span class="truncate">誕生日<span class="censored-block">█████</span>１</span>
                     </li>
                     <li class="flex items-center">
                         <span class="mr-2 text-blue-500">04.</span> 
-                        <span><span class="censored-block">█</span>劇</span>
+                        <span class="truncate"><span class="censored-block">█</span>劇</span>
                     </li>
                     <li class="flex items-center">
                         <span class="mr-2 text-blue-500">05.</span> 
-                        <span><span class="censored-block">██</span>子</span>
+                        <span class="truncate"><span class="censored-block">██</span>子</span>
                     </li>
                     <li class="flex items-center">
                         <span class="mr-2 text-blue-500">06.</span> 
-                        <span><span class="censored-block">███</span> Doe</span>
+                        <span class="truncate"><span class="censored-block">███</span> Doe</span>
                     </li>
                     <li class="flex items-center">
                         <span class="mr-2 text-blue-500">07.</span> 
-                        <span><span class="censored-block">████</span>孤独<span class="censored-block">███</span>惑星</span>
+                        <span class="truncate"><span class="censored-block">████</span>孤独<span class="censored-block">███</span>惑星</span>
                     </li>
                 </ul>
                 
                 <div class="absolute bottom-2 right-2 opacity-50 rotate-[-10deg]">
-                    <svg width="60" height="60" viewBox="0 0 100 100">
+                    <svg width="50" height="50" viewBox="0 0 100 100">
                         <circle cx="50" cy="50" r="45" stroke="red" stroke-width="4" fill="none" />
                         <text x="50" y="55" text-anchor="middle" fill="red" font-size="20" font-weight="bold" transform="rotate(-15 50 50)">SECRET</text>
                     </svg>
@@ -305,20 +306,20 @@
         </div>
 
         <!-- Footer Info & Calendar -->
-        <footer class="w-full text-center pb-4 flex-none z-30">
-            <div class="flex flex-col items-center justify-center space-y-3">
-                <div class="bg-black text-white px-6 py-1 text-2xl font-bold italic transform skew-x-[-10deg] shadow-[4px_4px_0_#fff]">
+        <footer class="w-full text-center pb-8 flex-none z-30 flex flex-col items-center justify-center">
+            <div class="flex flex-col items-center justify-center space-y-2">
+                <div class="bg-black text-white px-4 md:px-6 py-1 text-xl md:text-2xl font-bold italic transform skew-x-[-10deg] shadow-[4px_4px_0_#fff]">
                     4:30 PM TODAY
                 </div>
                 
-                <div class="text-base font-semibold uppercase tracking-wide drop-shadow-md leading-tight">
+                <div class="text-sm md:text-base font-semibold uppercase tracking-wide drop-shadow-md leading-tight max-w-[80%]">
                     David Friend Recital Hall
                 </div>
 
-                <!-- 2. Calendar Button (Added) -->
+                <!-- 2. Calendar Button -->
                 <div class="calendar-wrapper">
                     <button onclick="toggleCalendarDropdown()" class="calendar-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
                         </svg>
                         Add to Calendar
@@ -331,7 +332,7 @@
                         </button>
                         <a id="googleLink" href="#" target="_blank" class="dropdown-item">
                             <!-- Google Icon -->
-                            <svg style="height: 1.2em;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" fill="currentColor"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" fill="currentColor"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
                             Google Calendar
                         </a>
                     </div>
@@ -342,13 +343,13 @@
     </main>
 
     <script>
-        // --- 1. Background Text Generation Logic (Ported & Adapted) ---
+        // --- 1. Background Text Generation Logic ---
         function initBackgroundText() {
             const layer = document.querySelector('.background-text-layer');
             if (!layer) return;
             layer.innerHTML = '';
 
-            const fontSize = window.innerHeight * 0.15; // Adjusted size
+            const fontSize = window.innerHeight * 0.12; 
             const lineHeight = fontSize * 1.0;
             const totalHeight = Math.max(window.innerWidth, window.innerHeight) * 2.5; 
             const count = Math.ceil(totalHeight / lineHeight);
@@ -383,7 +384,7 @@
             const firstItem = layer.querySelector('.background-text-item');
             if (firstItem) {
                 const width = firstItem.offsetWidth;
-                const speed = 80; // slightly slower
+                const speed = 80; 
                 const duration = width / speed;
                 
                 const items = layer.querySelectorAll('.background-text-item');
@@ -401,14 +402,13 @@
         });
 
 
-        // --- 2. Calendar Logic (Ported) ---
-        // Config based on the Poster Info
+        // --- 2. Calendar Logic ---
         const eventConfig = {
             title: "TAMAGO J-pop Ensemble Live",
             description: "Live performance by TAMAGO at Berklee.",
             location: "David Friend Recital Hall, 921 Boylston St, Boston, MA 02115",
-            startUTC: "20251205T213000Z", // 2025-12-05 4:30PM EST is 21:30 UTC
-            endUTC:   "20251205T223000Z"  // 1 hour duration approx
+            startUTC: "20251205T213000Z", 
+            endUTC:   "20251205T223000Z"
         };
 
         function toggleCalendarDropdown() {
