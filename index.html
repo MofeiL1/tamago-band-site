@@ -132,7 +132,6 @@
         
         .marquee-text {
             display: inline-block;
-            /* Changed from 20px to 0em */
             padding-right: 0em; 
         }
 
@@ -146,7 +145,7 @@
         .calendar-wrapper {
             position: relative;
             z-index: 30;
-            margin-top: 16px;
+            margin-top: 8px; /* Slightly adjusted margin */
         }
 
         .calendar-btn {
@@ -358,16 +357,12 @@
 
         <!-- Footer Info & Calendar -->
         <footer class="w-full text-center pb-8 flex-none z-30 flex flex-col items-center justify-center">
-            <div class="flex flex-col items-center justify-center space-y-2">
+            <div class="flex flex-col items-center justify-center space-y-4">
                 <div class="bg-black text-white px-4 md:px-6 py-1 text-xl md:text-2xl font-bold italic transform skew-x-[-10deg] shadow-[4px_4px_0_#fff]">
                     4:30 PM TODAY
                 </div>
-                
-                <div class="text-sm md:text-base font-semibold uppercase tracking-wide drop-shadow-md leading-tight max-w-[80%]">
-                    David Friend Recital Hall
-                </div>
 
-                <!-- 2. Calendar Button -->
+                <!-- 2. Calendar Button (Moved Above Location) -->
                 <div class="calendar-wrapper">
                     <button onclick="toggleCalendarDropdown()" class="calendar-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
@@ -392,6 +387,17 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- Location Info (Moved Below Calendar) -->
+                <div class="flex flex-col items-center mt-2 space-y-1">
+                    <div class="text-sm md:text-base font-semibold uppercase tracking-wide drop-shadow-md leading-tight max-w-[80%]">
+                        David Friend Recital Hall
+                    </div>
+                    <div class="text-xs md:text-sm font-medium opacity-90 tracking-wide drop-shadow-md">
+                        921 Boylston St, Boston, MA 02115
+                    </div>
+                </div>
+
             </div>
         </footer>
 
