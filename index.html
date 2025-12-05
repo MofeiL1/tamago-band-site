@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TAMAGO SETLIST</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Added GSAP as per your reference file logic -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
     
@@ -21,12 +24,10 @@
             background-color: var(--poster-blue);
             font-family: 'Rubik', sans-serif;
             color: var(--poster-white);
-            /* Changed to min-height to allow scrolling */
             min-height: 100dvh; 
             width: 100%;
-            overflow-x: hidden; /* Keep horizontal hidden */
-            overflow-y: auto;   /* Allow vertical scroll */
-            /* Removed touch-action: none so user can scroll */
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .font-jp {
@@ -74,7 +75,7 @@
             to { transform: translateX(-100%); }
         }
 
-        /* --- Existing Animations --- */
+        /* --- Animations --- */
         @keyframes glitch {
             0% { opacity: 1; transform: translateY(0); }
             5% { opacity: 0.9; transform: translateY(-1px); }
@@ -106,25 +107,33 @@
         }
 
         .bg-egg {
-            position: fixed; /* Changed to fixed so they don't scroll weirdly relative to content */
+            position: fixed;
             opacity: 0.1;
             z-index: 1;
             animation: float 6s ease-in-out infinite;
         }
 
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        
+        /* --- UPDATED MARQUEE STYLES --- */
         .marquee-container {
             overflow: hidden;
             white-space: nowrap;
+            width: 100%;
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content; /* Ensure container fits content */
+        }
+
+        .marquee-content {
+            display: flex;
+            flex-shrink: 0;
         }
         
-        .marquee-content {
+        .marquee-text {
             display: inline-block;
-            animation: marquee 15s linear infinite;
+            /* Changed from 20px to 0em */
+            padding-right: 0em; 
         }
 
         .paper-texture {
@@ -137,7 +146,7 @@
         .calendar-wrapper {
             position: relative;
             z-index: 30;
-            margin-top: 16px; /* Increased margin */
+            margin-top: 16px;
         }
 
         .calendar-btn {
@@ -188,7 +197,6 @@
             pointer-events: auto;
         }
         
-        /* New style for the combined Apple Calendar item */
         .apple-calendar-group {
             color: black;
             text-decoration: none;
@@ -196,7 +204,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 12px 16px; /* Adjusted padding */
+            padding: 12px 16px;
             border: none;
             background: none;
             width: 100%;
@@ -248,16 +256,14 @@
             height: 1.2em;
         }
         
-        /* Style for the Apple Calendar main label */
         .apple-label {
             font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 4px; /* Space above tip */
+            margin-bottom: 4px;
         }
         
-        /* Style for the tip text */
         .apple-tip-text {
             font-size: 0.7rem;
             color: #888;
@@ -280,14 +286,13 @@
     <!-- Top Marquee -->
     <div class="w-full bg-black text-white py-1 z-20 border-b-4 border-white shadow-md relative shrink-0">
         <div class="marquee-container">
-            <div class="marquee-content font-bold text-lg tracking-widest uppercase">
-                BERKLEE J-POP ENSEMBLE ★ TAMAGO ★ LIVE PERFORMANCE ★ BERKLEE J-POP ENSEMBLE ★ TAMAGO ★
+            <div class="marquee-track font-bold text-lg tracking-widest uppercase">
+                <span class="marquee-text">BERKLEE J-POP ENSEMBLE ★ TAMAGO ★ LIVE PERFORMANCE ★ BERKLEE J-POP ENSEMBLE ★ TAMAGO ★</span>
             </div>
         </div>
     </div>
 
     <!-- Main Content Container -->
-    <!-- Changed: justify-start + gap-8 allows natural flow and scrolling without forcing spacing that clips -->
     <main class="flex-1 flex flex-col items-center justify-start py-8 gap-8 z-10 relative w-full overflow-visible">
         
         <!-- Header / Band Name -->
@@ -371,22 +376,17 @@
                         Add to Calendar
                     </button>
                     <div id="calendarDropdown" class="calendar-dropdown">
-                        <!-- COMBINED APPLE CALENDAR BUTTON -->
-                        <!-- Using a <button> element to wrap the entire area and handle the click event -->
                         <button onclick="downloadICS()" class="apple-calendar-group">
                             <div class="apple-label">
-                                <!-- Apple Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="1.2em" height="1.2em" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z"/></svg>
                                 Apple Calendar
                             </div>
-                            <!-- Tip Text -->
                             <div class="apple-tip-text">
                                 Open in Safari or Download in Chrome
                             </div>
                         </button>
                         
                         <a id="googleLink" href="#" target="_blank" class="dropdown-item">
-                            <!-- Google Icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" fill="currentColor"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
                             Google Calendar
                         </a>
@@ -416,39 +416,30 @@
             for (let i = 0; i < count; i++) {
                 const line = document.createElement('div');
                 line.className = 'background-text-line';
-                
-                // Stagger every other line
                 if (i % 2 !== 0) {
                     line.style.transform = 'translateX(-1.5em)';
                 }
-                
                 const item1 = document.createElement('div');
                 item1.className = 'background-text-item';
                 item1.textContent = content;
-                
                 const item2 = document.createElement('div');
                 item2.className = 'background-text-item';
                 item2.textContent = content;
-
                 line.appendChild(item1);
                 line.appendChild(item2);
                 layer.appendChild(line);
             }
-
-            // Calculate duration
             const firstItem = layer.querySelector('.background-text-item');
             if (firstItem) {
                 const width = firstItem.offsetWidth;
                 const speed = 80; 
                 const duration = width / speed;
-                
                 const items = layer.querySelectorAll('.background-text-item');
                 items.forEach(item => {
                     item.style.animationDuration = `${duration}s`;
                 });
             }
         }
-
         window.addEventListener('load', initBackgroundText);
         let bgResizeTimer;
         window.addEventListener('resize', () => {
@@ -456,11 +447,77 @@
             bgResizeTimer = setTimeout(initBackgroundText, 250);
         });
 
+        // --- 2. Seamless Marquee Logic (References your site logic with GSAP) ---
+        const marqueeSpeed = 100; // Pixels per second
+        
+        function setupMarquee() {
+            const track = document.querySelector('.marquee-track');
+            if (!track) return;
+            
+            // Get original content string only once to prevent compounding on resize
+            if (!track.dataset.originalContent) {
+                // Ensure we get innerHTML of the span, not the track div
+                const span = track.querySelector('.marquee-text');
+                track.dataset.originalContent = span ? span.outerHTML : track.innerHTML;
+            }
+            const originalContent = track.dataset.originalContent;
+            
+            // Clear current content
+            track.innerHTML = '';
+            
+            // Create a temporary container to measure content width
+            const contentBlock = document.createElement('div');
+            contentBlock.className = 'marquee-content';
+            contentBlock.innerHTML = originalContent;
+            track.appendChild(contentBlock);
+            
+            // Fill width logic: Duplicate content until it fills screen + buffer
+            while (contentBlock.getBoundingClientRect().width < window.innerWidth + 500) {
+                contentBlock.innerHTML += originalContent;
+            }
+            
+            // Get the precise width of the single filled block
+            const contentWidth = contentBlock.getBoundingClientRect().width;
+            
+            // Clone the block for seamless looping
+            const cloneBlock = contentBlock.cloneNode(true);
+            cloneBlock.setAttribute('aria-hidden', 'true');
+            track.appendChild(cloneBlock);
+            
+            // GSAP Animation: Move from 0 to -contentWidth
+            const duration = contentWidth / marqueeSpeed;
+            
+            gsap.killTweensOf(track);
+            gsap.fromTo(track, 
+                { x: 0 },
+                {
+                    x: -contentWidth,
+                    duration: duration,
+                    ease: "none",
+                    repeat: -1,
+                    overwrite: true
+                }
+            );
+        }
 
-        // --- 2. Calendar Logic ---
+        // Initialize marquee
+        window.addEventListener('load', setupMarquee);
+        let marqueeResizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(marqueeResizeTimer);
+            marqueeResizeTimer = setTimeout(setupMarquee, 250);
+        });
+        
+        // Wait for fonts to load to ensure correct width calculation
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(setupMarquee).catch(() => {});
+        }
+
+
+        // --- 3. Calendar Logic ---
         const eventConfig = {
             title: "TAMAGO J-pop Ensemble Live",
-            description: "Live performance by TAMAGO J-pop Ensemble at Berklee.",
+            description: "Live performance by TAMAGO at Berklee.",
             location: "David Friend Recital Hall, 921 Boylston St, Boston, MA 02115",
             startUTC: "20251205T213000Z", 
             endUTC:   "20251205T223000Z"
