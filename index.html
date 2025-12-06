@@ -8,12 +8,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Rock+Salt&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Rock+Salt&family=Zen+Kurenaido&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Restored Original Vibrant Blue */
-            --poster-blue: #00BFFF; /* Deep Sky Blue */
+            --poster-blue: #00BFFF;
             --poster-white: #ffffff;
             --poster-shadow: #007bb5;
             --block-color: #2a2a2a;
@@ -38,6 +37,10 @@
         .font-hand {
             font-family: 'Rock Salt', cursive;
         }
+        
+        .font-hand-jp {
+            font-family: 'Zen Kurenaido', sans-serif;
+        }
 
         /* --- Background Text Layer --- */
         .background-text-layer {
@@ -52,7 +55,7 @@
             flex-direction: column;
             justify-content: center;
             pointer-events: none;
-            opacity: 0.15; /* Restored opacity */
+            opacity: 0.15;
         }
 
         .background-text-line {
@@ -186,6 +189,38 @@
             text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
             transform: rotate(-2deg);
         }
+
+        /* --- Scroll Indicator --- */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            color: white;
+            text-align: center;
+            animation: bounce-slow 2s infinite;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes bounce-slow {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+
+        .scroll-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 <body class="flex flex-col relative min-h-screen">
@@ -243,7 +278,18 @@
                     </li>
                     <li class="flex items-start">
                         <span class="mr-2 text-blue-500 shrink-0">03.</span> 
-                        <span>誕生日はマイナス１</span>
+                        <!-- Modified: 'Minus' crossed out heavily, 'Plus' lower -->
+                        <span>誕生日は
+                            <span class="relative inline-block mx-1">
+                                <span class="relative z-0">マイナス</span>
+                                <!-- Scribble SVG for heavy cross-out -->
+                                <svg class="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-visible" viewBox="0 0 50 15" preserveAspectRatio="none">
+                                    <path d="M-2,10 L5,2 L10,12 L15,3 L20,12 L25,4 L30,12 L35,3 L40,12 L45,5 L52,10" vector-effect="non-scaling-stroke" stroke="#D32F2F" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <!-- Lowered position (top-[-1.2rem]) -->
+                                <span class="absolute -top-3 left-0 w-full text-center text-red-600 font-hand-jp font-bold text-sm transform -rotate-6 z-20">プラス</span>
+                            </span>
+                        １</span>
                     </li>
                     <li class="flex items-start">
                         <span class="mr-2 text-blue-500 shrink-0">04.</span> 
@@ -288,10 +334,10 @@
             </p>
         </div>
 
-        <!-- MEMBER LIST & SPECIAL THANKS (UPDATED STYLE) -->
+        <!-- MEMBER LIST & SPECIAL THANKS -->
         <div class="w-full max-w-[90%] sm:max-w-sm flex-shrink-0 transform -rotate-1 transition-transform duration-300 relative">
             <div class="bg-white text-black p-5 rounded-sm paper-texture relative shadow-xl">
-                 <!-- Blue Tape effect for visual distinction -->
+                 <!-- Blue Tape effect -->
                  <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-20 md:w-28 h-6 md:h-8 bg-blue-400 opacity-80 rotate-[-2deg] shadow-sm"></div>
 
                 <h3 class="text-center font-bold text-xl mb-4 border-b-4 border-black inline-block w-full">MEMBERS</h3>
@@ -307,7 +353,8 @@
                     </div>
                     <div class="flex flex-col">
                         <span class="font-bold text-black text-lg leading-none">Devon</span>
-                        <span class="text-xs text-gray-500 font-jp font-bold">Pno. Vo. Gt.</span>
+                        <!-- Updated Devon's instruments -->
+                        <span class="text-xs text-gray-500 font-jp font-bold">Pno. Key. Vo. Gt.</span>
                     </div>
                     <div class="flex flex-col">
                         <span class="font-bold text-black text-lg leading-none">Greenper</span>
@@ -341,7 +388,7 @@
         </div>
 
         <!-- Footer Info -->
-        <footer class="w-full text-center pb-8 flex-none z-30 flex flex-col items-center justify-center">
+        <footer class="w-full text-center pb-24 flex-none z-30 flex flex-col items-center justify-center">
             <div class="flex flex-col items-center justify-center space-y-4">
                 <!-- Date Updated -->
                 <div class="bg-black text-white px-4 md:px-6 py-1 text-xl md:text-2xl font-bold italic transform skew-x-[-10deg] shadow-[4px_4px_0_#fff]">
@@ -373,6 +420,14 @@
         </footer>
 
     </main>
+
+    <!-- Scroll Indicator -->
+    <div id="scrollIndicator" class="scroll-indicator">
+        <div class="scroll-text">SCROLL</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+        </svg>
+    </div>
 
     <script>
         // --- 1. Background Text Generation Logic ---
@@ -491,6 +546,18 @@
                 setTimeout(() => item.style.transform = 'none', 200);
             });
         }
+
+        // --- Scroll Indicator Logic ---
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        
+        // Hide scroll indicator immediately upon scroll
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '1';
+            }
+        });
     </script>
 </body>
 </html>
