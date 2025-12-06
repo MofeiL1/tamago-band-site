@@ -170,7 +170,6 @@
             text-transform: uppercase;
             text-align: center;
             line-height: 1;
-            /* Grunge texture via mask could go here, but simple dashed border is safer for plain CSS */
             background-image: radial-gradient(#D32F2F 15%, transparent 16%), radial-gradient(#D32F2F 15%, transparent 16%);
             background-size: 4px 4px;
             background-position: 0 0, 2px 2px;
@@ -287,6 +286,58 @@
                 "Thanks for creating this memory with us!<br>
                 See you next season!"
             </p>
+        </div>
+
+        <!-- MEMBER LIST & SPECIAL THANKS (UPDATED STYLE) -->
+        <div class="w-full max-w-[90%] sm:max-w-sm flex-shrink-0 transform -rotate-1 transition-transform duration-300 relative">
+            <div class="bg-white text-black p-5 rounded-sm paper-texture relative shadow-xl">
+                 <!-- Blue Tape effect for visual distinction -->
+                 <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-20 md:w-28 h-6 md:h-8 bg-blue-400 opacity-80 rotate-[-2deg] shadow-sm"></div>
+
+                <h3 class="text-center font-bold text-xl mb-4 border-b-4 border-black inline-block w-full">MEMBERS</h3>
+                
+                <div class="grid grid-cols-2 gap-x-4 gap-y-4 text-sm md:text-base text-left mb-6">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">AP</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Dr.</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">Connor</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Ba. Vo.</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">Devon</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Pno. Vo. Gt.</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">Greenper</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Vo.</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">Mofei</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Gt. Vo.</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">Phin</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Key. Pno.</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">Takumi</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Tbn. Vo. Key. Pno.</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black text-lg leading-none">Zoe</span>
+                        <span class="text-xs text-gray-500 font-jp font-bold">Vo.</span>
+                    </div>
+                </div>
+
+                <div class="border-t-2 border-dashed border-gray-300 pt-3 text-center">
+                    <div class="text-[10px] font-bold tracking-widest text-gray-400 mb-1">SPECIAL THANKS</div>
+                    <div class="font-hand text-sm md:text-base font-bold text-black rotate-[-1deg]">
+                        Professor Yukihiro Carmichael
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Footer Info -->
