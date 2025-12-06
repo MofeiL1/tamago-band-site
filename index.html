@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TAMAGO SETLIST</title>
+    <title>TAMAGO SETLIST - THANK YOU!</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Added GSAP as per your reference file logic -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Rock+Salt&display=swap" rel="stylesheet">
     
     <style>
         :root {
+            /* Restored Original Vibrant Blue */
             --poster-blue: #00BFFF; /* Deep Sky Blue */
             --poster-white: #ffffff;
             --poster-shadow: #007bb5;
             --block-color: #2a2a2a;
-            --tamago-yellow: #FFF100; /* Bright Yellow */
+            --tamago-yellow: #FFF100;
+            --stamp-red: #D32F2F;
         }
         
         body {
@@ -33,6 +34,10 @@
         .font-jp {
             font-family: 'Mochiy Pop One', sans-serif;
         }
+        
+        .font-hand {
+            font-family: 'Rock Salt', cursive;
+        }
 
         /* --- Background Text Layer --- */
         .background-text-layer {
@@ -47,7 +52,7 @@
             flex-direction: column;
             justify-content: center;
             pointer-events: none;
-            opacity: 0.15;
+            opacity: 0.15; /* Restored opacity */
         }
 
         .background-text-line {
@@ -75,31 +80,7 @@
             to { transform: translateX(-100%); }
         }
 
-        /* --- Animations --- */
-        @keyframes glitch {
-            0% { opacity: 1; transform: translateY(0); }
-            5% { opacity: 0.9; transform: translateY(-1px); }
-            10% { opacity: 1; transform: translateY(2px); }
-            15% { opacity: 1; transform: translateY(-0.5px); }
-            20% { opacity: 1; transform: translateY(0); }
-            80% { opacity: 1; transform: translateY(0); }
-            85% { opacity: 1; transform: translateY(1.5px); }
-            90% { opacity: 0.6; transform: translateY(-1px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .censored-block {
-            display: inline-block;
-            animation: glitch 2.5s infinite steps(2, jump-none) alternate-reverse;
-            color: transparent;
-            background: var(--block-color);
-            line-height: 0.8;
-            padding: 0 2px;
-            filter: none !important; 
-            text-shadow: none !important;
-            -webkit-text-stroke: 0 !important;
-        }
-
+        /* --- Floating Eggs --- */
         @keyframes float {
             0% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(5deg); }
@@ -113,7 +94,7 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        /* --- UPDATED MARQUEE STYLES --- */
+        /* --- Marquee --- */
         .marquee-container {
             overflow: hidden;
             white-space: nowrap;
@@ -122,7 +103,7 @@
 
         .marquee-track {
             display: flex;
-            width: max-content; /* Ensure container fits content */
+            width: max-content;
         }
 
         .marquee-content {
@@ -141,134 +122,70 @@
             box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
         }
 
-        /* --- Calendar Button Styles --- */
+        /* --- Disabled Calendar Button --- */
         .calendar-wrapper {
             position: relative;
             z-index: 30;
-            margin-top: 8px; /* Slightly adjusted margin */
+            margin-top: 8px;
         }
 
-        .calendar-btn {
-            background-color: var(--tamago-yellow);
-            color: black;
+        .calendar-btn-disabled {
+            background-color: #cbd5e0; /* Grey */
+            color: #718096; /* Darker grey text */
             font-family: 'Rubik', sans-serif;
             font-weight: 900;
             padding: 14px 32px;
             font-size: 1.1rem;
-            border: 4px solid black;
-            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: all 0.2s ease;
+            border: 4px solid #718096;
+            box-shadow: none;
+            cursor: not-allowed;
             text-transform: uppercase;
             display: inline-flex;
             align-items: center;
             gap: 10px;
             white-space: nowrap;
+            opacity: 0.8;
         }
 
-        .calendar-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
-        }
-
-        .calendar-dropdown {
-            display: flex;
+        /* --- Stamp Effect --- */
+        .stamp-container {
             position: absolute;
-            bottom: 110%;
+            top: 50%;
             left: 50%;
-            transform: translate(-50%, 10px) scale(0.9);
-            opacity: 0;
-            visibility: hidden;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            z-index: 50;
             pointer-events: none;
-            background-color: white;
-            min-width: 240px;
-            border: 4px solid black;
-            flex-direction: column;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
-            z-index: 40;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            mix-blend-mode: multiply;
+            opacity: 0.85;
+            animation: stamp-bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        .calendar-dropdown.show {
-            visibility: visible;
-            opacity: 1;
-            transform: translate(-50%, 0) scale(1);
-            pointer-events: auto;
-        }
-        
-        .apple-calendar-group {
-            color: black;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 16px;
-            border: none;
-            background: none;
-            width: 100%;
-            cursor: pointer;
-            font-family: 'Rubik', sans-serif;
-            font-weight: 700;
-            border-bottom: 2px solid #eee;
-            transition: background-color 0.2s;
-        }
-
-        .apple-calendar-group:hover {
-            background-color: var(--poster-blue);
-            color: white;
-        }
-
-        .apple-calendar-group:hover .apple-tip-text {
-            color: white !important;
-        }
-
-        .dropdown-item {
-            color: black;
-            padding: 16px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: none;
-            background: none;
-            width: 100%;
-            cursor: pointer;
-            font-family: 'Rubik', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            border-bottom: 2px solid #eee;
-        }
-
-        .dropdown-item:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-item:hover {
-            background-color: var(--poster-blue);
-            color: white;
-        }
-        
-        .dropdown-item svg {
-            width: 1.2em;
-            height: 1.2em;
-        }
-        
-        .apple-label {
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 4px;
-        }
-        
-        .apple-tip-text {
-            font-size: 0.7rem;
-            color: #888;
+        .stamp-box {
+            border: 8px solid var(--stamp-red);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: var(--stamp-red);
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 3rem;
+            text-transform: uppercase;
             text-align: center;
-            font-weight: 500;
-            line-height: 1.1;
+            line-height: 1;
+            /* Grunge texture via mask could go here, but simple dashed border is safer for plain CSS */
+            background-image: radial-gradient(#D32F2F 15%, transparent 16%), radial-gradient(#D32F2F 15%, transparent 16%);
+            background-size: 4px 4px;
+            background-position: 0 0, 2px 2px;
+            -webkit-background-clip: text;
+        }
+
+        @keyframes stamp-bounce {
+            0% { transform: translate(-50%, -50%) scale(2) rotate(-15deg); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(-15deg); opacity: 0.85; }
+        }
+
+        .thank-you-note {
+            font-family: 'Rock Salt', cursive;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
         }
     </style>
 </head>
@@ -285,8 +202,8 @@
     <!-- Top Marquee -->
     <div class="w-full bg-black text-white py-1 z-20 border-b-4 border-white shadow-md relative shrink-0">
         <div class="marquee-container">
-            <div class="marquee-track font-bold text-lg tracking-widest uppercase">
-                <span class="marquee-text">BERKLEE J-POP ENSEMBLE ★ TAMAGO ★ LIVE PERFORMANCE ★ BERKLEE J-POP ENSEMBLE ★ TAMAGO ★</span>
+            <div class="marquee-track font-bold text-lg tracking-widest uppercase text-yellow-300">
+                <span class="marquee-text">THANK YOU FOR COMING! ★ TAMAGO 1st LIVE ★ SEE YOU NEXT TIME! ★ ARIGATO! ★ ありがとうございました！ ★ </span>
             </div>
         </div>
     </div>
@@ -295,7 +212,7 @@
     <main class="flex-1 flex flex-col items-center justify-start py-8 gap-8 z-10 relative w-full overflow-visible">
         
         <!-- Header / Band Name -->
-        <header class="text-center animate-bounce flex-none">
+        <header class="text-center flex-none opacity-90">
             <h2 class="text-lg md:text-2xl font-bold tracking-tighter uppercase drop-shadow-md transform -rotate-2">
                 J-POP ENSEMBLE
             </h2>
@@ -307,89 +224,92 @@
             </div>
         </header>
 
-        <!-- Setlist Card -->
-        <div class="w-full max-w-[90%] sm:max-w-sm flex-shrink-0 transform rotate-1 transition-transform hover:rotate-0 duration-300">
+        <!-- Setlist Card (Full Reveal) -->
+        <div class="w-full max-w-[90%] sm:max-w-sm flex-shrink-0 transform rotate-1 transition-transform duration-300 relative">
             <div class="bg-white text-black p-4 md:p-6 rounded-sm paper-texture relative shadow-xl">
                 <!-- Tape effect -->
                 <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-24 md:w-32 h-6 md:h-8 bg-yellow-300 opacity-80 rotate-1 shadow-sm"></div>
 
                 <h3 class="text-center font-bold text-xl md:text-2xl mb-2 md:mb-4 border-b-4 border-black inline-block w-full">SETLIST</h3>
                 
-                <ul class="space-y-1 text-base sm:text-lg md:text-xl font-semibold font-jp leading-tight">
-                    <li class="flex items-center">
-                        <span class="mr-2 text-blue-500">01.</span> 
-                        <span class="truncate">P<span class="censored-block">███</span> Love</span>
+                <!-- FULL SETLIST REVEALED -->
+                <ul class="space-y-2 text-base sm:text-lg md:text-xl font-semibold font-jp leading-tight pb-2">
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">01.</span> 
+                        <span>Plastic Love</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-2 text-blue-500">02.</span> 
-                        <span class="truncate">み<span class="censored-block">████</span>雨</span>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">02.</span> 
+                        <span>みずいろの雨</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-2 text-blue-500">03.</span> 
-                        <span class="truncate">誕生日<span class="censored-block">█████</span>１</span>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">03.</span> 
+                        <span>誕生日はマイナス１</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-2 text-blue-500">04.</span> 
-                        <span class="truncate"><span class="censored-block">█</span>劇</span>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">04.</span> 
+                        <span>喜劇</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-2 text-blue-500">05.</span> 
-                        <span class="truncate"><span class="censored-block">██</span>子</span>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">05.</span> 
+                        <span>The Last Story of the Myth</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-2 text-blue-500">06.</span> 
-                        <span class="truncate"><span class="censored-block">███</span> Doe</span>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">06.</span> 
+                        <span>踊り子</span>
                     </li>
-                    <li class="flex items-center">
-                        <span class="mr-2 text-blue-500">07.</span> 
-                        <span class="truncate"><span class="censored-block">████</span>孤独<span class="censored-block">███</span>惑星</span>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">07.</span> 
+                        <span>Jane Doe</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">08.</span> 
+                        <span>Flying Beagle</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-blue-500 shrink-0">09.</span> 
+                        <span>ギターと孤独と蒼い惑星</span>
                     </li>
                 </ul>
                 
-                <div class="absolute bottom-2 right-2 opacity-50 rotate-[-10deg]">
-                    <svg width="50" height="50" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" stroke="red" stroke-width="4" fill="none" />
-                        <text x="50" y="55" text-anchor="middle" fill="red" font-size="20" font-weight="bold" transform="rotate(-15 50 50)">SECRET</text>
-                    </svg>
+                <!-- STAMP OVERLAY -->
+                <div class="stamp-container">
+                    <div class="stamp-box">
+                        THANK<br>YOU!!
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Thank You Note -->
+        <div class="w-full max-w-[90%] sm:max-w-sm text-center px-4">
+            <p class="thank-you-note text-yellow-300 text-lg md:text-xl leading-relaxed">
+                "Thanks for creating this memory with us!<br>
+                See you next season!"
+            </p>
+        </div>
 
-        <!-- Footer Info & Calendar -->
+        <!-- Footer Info -->
         <footer class="w-full text-center pb-8 flex-none z-30 flex flex-col items-center justify-center">
             <div class="flex flex-col items-center justify-center space-y-4">
+                <!-- Date Updated -->
                 <div class="bg-black text-white px-4 md:px-6 py-1 text-xl md:text-2xl font-bold italic transform skew-x-[-10deg] shadow-[4px_4px_0_#fff]">
-                    4:30 PM TODAY
+                    Dec 5th, 2025
                 </div>
 
-                <!-- 2. Calendar Button (Moved Above Location) -->
+                <!-- Disabled Button -->
                 <div class="calendar-wrapper">
-                    <button onclick="toggleCalendarDropdown()" class="calendar-btn">
+                    <div class="calendar-btn-disabled">
+                        <!-- X Icon -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                         </svg>
-                        Add to Calendar
-                    </button>
-                    <div id="calendarDropdown" class="calendar-dropdown">
-                        <button onclick="downloadICS()" class="apple-calendar-group">
-                            <div class="apple-label">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="1.2em" height="1.2em" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z"/></svg>
-                                Apple Calendar
-                            </div>
-                            <div class="apple-tip-text">
-                                Open in Safari or Download in Chrome
-                            </div>
-                        </button>
-                        
-                        <a id="googleLink" href="#" target="_blank" class="dropdown-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" fill="currentColor"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
-                            Google Calendar
-                        </a>
+                        EVENT ENDED
                     </div>
                 </div>
 
-                <!-- Location Info (Moved Below Calendar) -->
-                <div class="flex flex-col items-center mt-2 space-y-1">
+                <!-- Location Info -->
+                <div class="flex flex-col items-center mt-2 space-y-1 opacity-70">
                     <div class="text-sm md:text-base font-semibold uppercase tracking-wide drop-shadow-md leading-tight max-w-[80%]">
                         David Friend Recital Hall
                     </div>
@@ -453,44 +373,36 @@
             bgResizeTimer = setTimeout(initBackgroundText, 250);
         });
 
-        // --- 2. Seamless Marquee Logic (References your site logic with GSAP) ---
+        // --- 2. Seamless Marquee Logic ---
         const marqueeSpeed = 100; // Pixels per second
         
         function setupMarquee() {
             const track = document.querySelector('.marquee-track');
             if (!track) return;
             
-            // Get original content string only once to prevent compounding on resize
             if (!track.dataset.originalContent) {
-                // Ensure we get innerHTML of the span, not the track div
                 const span = track.querySelector('.marquee-text');
                 track.dataset.originalContent = span ? span.outerHTML : track.innerHTML;
             }
             const originalContent = track.dataset.originalContent;
             
-            // Clear current content
             track.innerHTML = '';
             
-            // Create a temporary container to measure content width
             const contentBlock = document.createElement('div');
             contentBlock.className = 'marquee-content';
             contentBlock.innerHTML = originalContent;
             track.appendChild(contentBlock);
             
-            // Fill width logic: Duplicate content until it fills screen + buffer
             while (contentBlock.getBoundingClientRect().width < window.innerWidth + 500) {
                 contentBlock.innerHTML += originalContent;
             }
             
-            // Get the precise width of the single filled block
             const contentWidth = contentBlock.getBoundingClientRect().width;
             
-            // Clone the block for seamless looping
             const cloneBlock = contentBlock.cloneNode(true);
             cloneBlock.setAttribute('aria-hidden', 'true');
             track.appendChild(cloneBlock);
             
-            // GSAP Animation: Move from 0 to -contentWidth
             const duration = contentWidth / marqueeSpeed;
             
             gsap.killTweensOf(track);
@@ -506,7 +418,6 @@
             );
         }
 
-        // Initialize marquee
         window.addEventListener('load', setupMarquee);
         let marqueeResizeTimer;
         window.addEventListener('resize', () => {
@@ -514,101 +425,11 @@
             marqueeResizeTimer = setTimeout(setupMarquee, 250);
         });
         
-        // Wait for fonts to load to ensure correct width calculation
         if (document.fonts && document.fonts.ready) {
             document.fonts.ready.then(setupMarquee).catch(() => {});
         }
 
-
-        // --- 3. Calendar Logic ---
-        const eventConfig = {
-            title: "TAMAGO J-pop Ensemble Live",
-            description: "Live performance by TAMAGO at Berklee.",
-            location: "David Friend Recital Hall, 921 Boylston St, Boston, MA 02115",
-            startUTC: "20251205T213000Z", 
-            endUTC:   "20251205T223000Z"
-        };
-
-        function toggleCalendarDropdown() {
-            const dropdown = document.getElementById("calendarDropdown");
-            dropdown.classList.toggle("show");
-        }
-
-        function handleOutsideInteraction(event) {
-            if (event.target && event.target.closest && event.target.closest('.calendar-wrapper')) return;
-
-            const dropdowns = document.getElementsByClassName("calendar-dropdown");
-            for (let i = 0; i < dropdowns.length; i++) {
-                const openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-
-        window.addEventListener('click', handleOutsideInteraction);
-        window.addEventListener('touchstart', handleOutsideInteraction, { passive: true });
-
-        function downloadICS() {
-            const icsContent = [
-                'BEGIN:VCALENDAR',
-                'VERSION:2.0',
-                'PRODID:-//Tamago Band//Flyer//EN',
-                'CALSCALE:GREGORIAN',
-                'BEGIN:VEVENT',
-                `SUMMARY:${eventConfig.title}`,
-                `DTSTART:${eventConfig.startUTC}`,
-                `DTEND:${eventConfig.endUTC}`,
-                `LOCATION:${eventConfig.location.replace(/,/g, '\\,')}`,
-                `DESCRIPTION:${eventConfig.description}`,
-                'STATUS:CONFIRMED',
-                'SEQUENCE:0',
-                'BEGIN:VALARM',
-                'TRIGGER:-PT30M',
-                'ACTION:DISPLAY',
-                'DESCRIPTION:Reminder',
-                'END:VALARM',
-                'END:VEVENT',
-                'END:VCALENDAR'
-            ].join('\r\n');
-
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-            if (isIOS) {
-                const dataUrl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
-                const link = document.createElement('a');
-                link.href = dataUrl;
-                link.setAttribute('download', 'tamago_performance.ics');
-                link.target = '_self'; 
-                const evt = new MouseEvent('click', { view: window, bubbles: true, cancelable: false });
-                link.dispatchEvent(evt);
-            } else {
-                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'tamago_performance.ics');
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        }
-
-        function setGoogleLink() {
-            const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
-            const text = `&text=${encodeURIComponent(eventConfig.title)}`;
-            const dates = `&dates=${eventConfig.startUTC}/${eventConfig.endUTC}`;
-            const details = `&details=${encodeURIComponent(eventConfig.description)}`;
-            const location = `&location=${encodeURIComponent(eventConfig.location)}`;
-            
-            const link = document.getElementById('googleLink');
-            if(link) link.href = baseUrl + text + dates + details + location;
-        }
-
-        setGoogleLink();
-
-
-        // --- Visual Ripple Effect ---
+        // --- Visual Ripple Effect (Keep it for fun) ---
         document.addEventListener('touchstart', function(e) { createRipple(e); });
         document.addEventListener('click', function(e) { createRipple(e); });
 
