@@ -221,6 +221,15 @@
             letter-spacing: 0.1em;
             margin-bottom: 2px;
         }
+
+        /* Handwritten bold helper - UPDATED for extra thickness */
+        .hand-bold {
+            text-shadow: 
+                0.8px 0 0 currentColor, -0.8px 0 0 currentColor, 
+                0 0.8px 0 currentColor, 0 -0.8px 0 currentColor,
+                0.5px 0.5px 0 currentColor, -0.5px -0.5px 0 currentColor,
+                0.5px -0.5px 0 currentColor, -0.5px 0.5px 0 currentColor;
+        }
     </style>
 </head>
 <body class="flex flex-col relative min-h-screen">
@@ -278,18 +287,8 @@
                     </li>
                     <li class="flex items-start">
                         <span class="mr-2 text-blue-500 shrink-0">03.</span> 
-                        <!-- Modified: 'Minus' crossed out heavily, 'Plus' lower -->
-                        <span>誕生日は
-                            <span class="relative inline-block mx-1">
-                                <span class="relative z-0">マイナス</span>
-                                <!-- Scribble SVG for heavy cross-out -->
-                                <svg class="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-visible" viewBox="0 0 50 15" preserveAspectRatio="none">
-                                    <path d="M-2,10 L5,2 L10,12 L15,3 L20,12 L25,4 L30,12 L35,3 L40,12 L45,5 L52,10" vector-effect="non-scaling-stroke" stroke="#D32F2F" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <!-- Lowered position (top-[-1.2rem]) -->
-                                <span class="absolute -top-3 left-0 w-full text-center text-red-600 font-hand-jp font-bold text-sm transform -rotate-6 z-20">プラス</span>
-                            </span>
-                        １</span>
+                        <!-- REVISED: Zero whitespace between tags to remove gaps -->
+                        <span>誕生日は<span class="relative inline-block mx-0"><span class="relative z-0">マイナス</span><svg class="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-visible" viewBox="-6 0 60 15" preserveAspectRatio="none"><path d="M-5,12 L5,3 L10,13 L15,2 L20,13 L25,3 L30,13 L35,2 L40,13 L45,4 L55,11" vector-effect="non-scaling-stroke" stroke="#D32F2F" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="absolute -top-5 left-0 w-full text-center text-red-600 font-hand-jp font-black text-xl hand-bold transform -rotate-6 z-20" style="left: 50%; transform: translateX(-50%) rotate(-6deg); width: auto; white-space: nowrap;">プラス</span></span>１</span>
                     </li>
                     <li class="flex items-start">
                         <span class="mr-2 text-blue-500 shrink-0">04.</span> 
@@ -353,7 +352,6 @@
                     </div>
                     <div class="flex flex-col">
                         <span class="font-bold text-black text-lg leading-none">Devon</span>
-                        <!-- Updated Devon's instruments -->
                         <span class="text-xs text-gray-500 font-jp font-bold">Pno. Key. Vo. Gt.</span>
                     </div>
                     <div class="flex flex-col">
